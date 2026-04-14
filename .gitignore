@@ -1,2 +1,30 @@
-.idea
+# File environment variables (API keys)
 .env
+
+# LightRAG storage directory
+rag_storage/
+*.graphml
+*.json
+*.log
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Virtual environment (jika ada)
+venv/
+env/
+.venv/
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Dataset besar (jika tidak ingin di-commit)
+2026/
+*.txt
