@@ -6,7 +6,7 @@ from utils.download_and_save_data import download_and_save_data
 
 def main():
     TAHUN = 2026
-    KUARTAL = 1
+    KUARTAL = 2
     MINGGU_MAX = 1
 
     info_url = f"https://raw.githubusercontent.com/Adventech/sabbath-school-lessons/refs/heads/stage/src/in/{TAHUN}-{KUARTAL:02d}/info.yml"

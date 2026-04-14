@@ -74,7 +74,8 @@ isi_ayat: {ayat_isi}
 {clean_text}
 """
             # Create directories and save
-            output_dir = f"./{y}"
+
+            output_dir = f"./data/{y}"
             folder_quartal = os.path.join(output_dir, f"{q:02d}")
             os.makedirs(folder_quartal, exist_ok=True)
             folder_mingguan = os.path.join(folder_quartal, f"{w:02d}")
