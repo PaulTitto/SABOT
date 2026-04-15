@@ -10,7 +10,7 @@ rag_storage/
 # Python cache
 __pycache__/
 *.pyc
-
+.idea
 # Virtual environment (jika ada)
 venv/
 env/

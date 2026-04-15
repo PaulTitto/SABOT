@@ -2,7 +2,6 @@ import os
 
 from lightrag import LightRAG
 from lightrag.llm.gemini import gemini_model_complete, gemini_embed
-from openai import api_key
 
 
 # Gemini
