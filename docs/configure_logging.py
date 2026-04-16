@@ -1,6 +1,7 @@
 import logging
+import logging.config
 import os.path
-from lightrag.utils import EmbeddingFunc, logger, set_verbose_debug, wrap_embedding_func_with_attrs
+from lightrag.utils import logger, set_verbose_debug
 
 def configure_logging():
     for name in ["uvicorn", "uvicorn.access", "uvicorn.error", "lightrag"]:

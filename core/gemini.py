@@ -10,10 +10,10 @@ if not os.path.exists(WORKING_DIR):
 
 
 async def gemini_llm_model_func(
-    prompt,
-    system_prompt=None,
-    history_messages=[],
-    **kwargs
+        prompt,
+        system_prompt=None,
+        history_messages=[],
+        **kwargs
 ):
     return await gemini_model_complete(
         prompt,
@@ -26,18 +26,17 @@ async def gemini_llm_model_func(
 
 
 @wrap_embedding_func_with_attrs(
-    embedding_dim=768,
-    send_dimensions=True,
+    embedding_dim=1536,
     max_token_size=2048,
-    model_name="models/gemini-embedding-001",
+    model_name="gemini-embedding-001",   # correct name, no 'models/'
 )
-async def embedding_func(texts: list[str]) -> np.ndarray:
-    return await gemini_embed.func(
+async def embedding_func(texts: list[str], **kwargs) -> np.ndarray:
+    return await gemini_embed(
         texts,
         api_key=os.getenv("GEMINI_API_KEY"),
-        model="models/gemini-embedding-001"
+        model="gemini-embedding-001",    # correct name
+        embedding_dim=1536       # must match embedding_dim
     )
-
 
 async def init_gemini_lightRAG():
     rag = LightRAG(
