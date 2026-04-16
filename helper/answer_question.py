@@ -1,6 +1,9 @@
+import inspect
+
 from lightrag import QueryParam
 
 from helper.date_helper import extract_date_from_question, get_today_iso
+
 
 
 async def answer_question(rag, question: str) -> str:
@@ -18,8 +21,14 @@ async def answer_question(rag, question: str) -> str:
         user_prompt="Anda adalah asisten pelajaran Sekolah Sabat. Jawab berdasarkan fakta dari database."
     )
     try:
-        jawaban = await rag.aquery(question, param=param)
-        return jawaban if jawaban else "Maaf, saya tidak menemukan jawaban."
+        resp = await rag.aquery(question, param=param)
+        if inspect.isasyncgen(resp):
+            chunks = []
+            async for chunk in resp:
+                chunks.append(chunk)
+                print(chunk, end="", flush=True)
+            return "".join(chunks)
+        else:
+            return str(resp)
     except Exception as e:
         return f"Terjadi kesalahan: {e}"
-

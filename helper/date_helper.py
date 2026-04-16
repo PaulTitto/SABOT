@@ -1,4 +1,7 @@
-import datetime
+import re
+from typing import Optional
+from datetime import datetime
+
 
 def extract_date_from_question(question: str) -> Optional[str]:
     iso_match = re.search(r'\d{4}-\d{2}-\d{2}', question)

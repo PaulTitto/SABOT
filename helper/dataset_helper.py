@@ -3,7 +3,7 @@ import os.path
 import re
 from typing import Optional
 
-
+DATA_ROOT = "./data/"
 def extract_doc_id(content: str) -> Optional[str]:
     match = re.search(r'^id:\s*(\S+)', content, re.MULTILINE)
     return  match.group(1) if match else None
