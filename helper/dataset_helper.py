@@ -11,7 +11,7 @@ def extract_doc_id(content: str) -> Optional[str]:
 
 async def insert_documents_folder(rag, root_dir: str):
     if not os.path.exists(root_dir):
-        print(f"❌ Folder {root_dir} tidak ditemukan")
+        print(f"Folder {root_dir} tidak ditemukan")
         return
 
     files = []

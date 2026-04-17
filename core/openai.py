@@ -1,8 +1,11 @@
 import os
 
-from lightrag.llm.openai import openai_complete_if_cache
+from lightrag import LightRAG
+from lightrag.llm.openai import openai_complete_if_cache, openai_embed
 
-
+WORKING_DIR = "openai_rag_storage"
+if not os.path.exists(WORKING_DIR):
+    os.mkdir(WORKING_DIR)
 async def gpt_4o_mini_complete(
     prompt,
     system_prompt=None,
@@ -23,3 +26,13 @@ async def gpt_4o_mini_complete(
         keyword_extraction=keyword_extraction,
         **kwargs,
     )
+
+
+async def init_openai_lightRAG():
+    rag = LightRAG(
+        working_dir=WORKING_DIR,
+        llm_model_func=gpt_4o_mini_complete,
+        embedding_func=openai_embed,
+    )
+    await rag.initialize_storages()
+    return rag
