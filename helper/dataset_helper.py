@@ -20,7 +20,7 @@ async def insert_documents_folder(rag, root_dir: str):
             if f.endswith(".txt"):
                 files.append(os.path.join(dir_path, f))
 
-    print(f"📂 Ditemukan {len(files)} file .txt")
+    print(f"Ditemukan {len(files)} file .txt")
 
     for path in files:
         with open(path, "r", encoding="utf-8") as fp:
@@ -32,11 +32,11 @@ async def insert_documents_folder(rag, root_dir: str):
         doc_id = extract_doc_id(content)
         try:
             await rag.ainsert(content)
-            print(f"✅ Berhasil Indeks: {doc_id}")
+            print(f"Berhasil Indeks: {doc_id}")
         except Exception as e:
             if "already exists" in str(e).lower():
-                print(f"⏭️ Dokumen {doc_id} sudah ada. Dilewati.")
+                print(f"⏭Dokumen {doc_id} sudah ada. Dilewati.")
             else:
-                print(f"❌ Error pada {doc_id}: {e}")
+                print(f"Error pada {doc_id}: {e}")
 
         await asyncio.sleep(0.2)

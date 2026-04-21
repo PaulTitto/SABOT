@@ -31,3 +31,5 @@ gemini_rag_storage/
 *.txt
 deep_seek_rag_storage
 openai_rag_storage
+graph_data_full.csv
+research_performance_logs.csv
