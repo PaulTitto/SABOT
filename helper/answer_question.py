@@ -3,33 +3,43 @@ import inspect
 import time
 from lightrag import QueryParam
 
-# Import tracker dari core
-from core.gemini import llm_tracker, embed_tracker
 from helper.calculate_cost import get_gemini_detailed_costs
 from helper.date_helper import extract_date_from_question, get_today_iso
 from helper.save_csv import save_to_csv
 
+import time
+import inspect
+from datetime import datetime
+from lightrag import QueryParam
+from helper.date_helper import extract_date_from_question, get_today_iso
+from helper.save_csv import save_to_csv
+from helper.calculate_cost import get_deepseek_detailed_costs, get_gemini_detailed_costs
 
-async def answer_question(model: str, rag, question: str) -> str:
+
+async def answer_question(model, rag, question, llm_tracker, embed_tracker) -> str:
+    metrics = {
+        "llm_p": 0, "llm_c": 0, "emb_p": 0,
+        "c_llm": 0, "c_emb": 0, "total": 0
+    }
+    result = "Gagal mendapatkan jawaban."
+    start_time = time.time()
+
     date_iso = extract_date_from_question(question)
     if date_iso:
         question = f"Pelajaran untuk tanggal {date_iso}. {question}"
     elif "hari ini" in question.lower():
         question = f"Pelajaran untuk tanggal {get_today_iso()}. {question}"
 
-    MODE = "hybrid"
     param = QueryParam(
-        mode=MODE,
+        mode="hybrid",
         top_k=5,
         stream=True,
-        user_prompt="Anda adalah asisten Sekolah Sabat. Jawab berdasarkan fakta database secara singkat dan to-the-point dan jangan menyebutkan referensinya. Jika tidak ada di database, katakan tidak tahu."
+        user_prompt="Anda adalah asisten Sekolah Sabat. Jawab berdasarkan fakta database secara singkat."
     )
 
     try:
         llm_tracker.reset()
         embed_tracker.reset()
-
-        start_time = time.time()
 
         resp = await rag.aquery(question, param=param)
 
@@ -44,15 +54,18 @@ async def answer_question(model: str, rag, question: str) -> str:
             print(result)
 
         latency = time.time() - start_time
-        if model == "gemini-2.5-flash-lite":
+
+        if "deepseek-chat" in model.lower():
+            metrics = get_deepseek_detailed_costs(llm_tracker.get_usage(), embed_tracker.get_usage())
+        if  "gemini-2.5-flash-lite" in model.lower():
             metrics = get_gemini_detailed_costs(llm_tracker.get_usage(), embed_tracker.get_usage())
 
-        data = {
+        save_to_csv({
             "timestamp": datetime.now().isoformat(),
             "model": model,
-            "mode": MODE,
+            "mode": "hybrid",
             "question": question,
-            "answer": result[:200] + "...",
+            "answer": result[:150],
             "latency": latency,
             "llm_p_tokens": metrics["llm_p"],
             "llm_c_tokens": metrics["llm_c"],
@@ -61,21 +74,21 @@ async def answer_question(model: str, rag, question: str) -> str:
             "cost_embed": metrics["c_emb"],
             "total_cost": metrics["total"],
             "call_count": llm_tracker.get_usage().get("call_count", 0)
-        }
-
-        save_to_csv(data)
-
-        print("\n" + "=" * 30)
-        print("--- QUERY METRICS ---")
-        print(f"Latency   : {latency:.2f}s")
-        print(f"LLM Cost  : ${metrics['c_llm']:.6f} (P:{metrics['llm_p']} | C:{metrics['llm_c']})")
-        print(f"Embed Cost: ${metrics['c_emb']:.6f} (Tokens: {metrics['emb_p']})")
-        print(f"Total Cost: ${metrics['total']:.6f}")
-        print("=" * 30 + "\n")
-
+        })
         return result
 
     except Exception as e:
-        error_msg = f"Terjadi kesalahan pada answer_question: {e}"
-        print(error_msg)
-        return error_msg
+        print(f"\n--- ERROR DETECTED ---")
+        print(f"Detail: {e}")
+
+        save_to_csv({
+            "timestamp": datetime.now().isoformat(),
+            "model": model,
+            "mode": "ERROR",
+            "question": question,
+            "answer": f"ERROR: {str(e)[:100]}",
+            "latency": time.time() - start_time,
+            "llm_p_tokens": 0, "llm_c_tokens": 0, "embed_tokens": 0,
+            "cost_llm": 0, "cost_embed": 0, "total_cost": 0, "call_count": 0
+        })
+        return f"Terjadi kesalahan: {e}"

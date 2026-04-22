@@ -1,21 +1,23 @@
 import asyncio
 import os
-import time  # Fix: Gunakan import time standar untuk latency
+import time
 
-from core.gemini import init_gemini_lightRAG, WORKING_DIR, llm_tracker, embed_tracker
+from core.gemini import WORKING_DIR
 from docs.configure_logging import configure_logging
 from helper.answer_question import answer_question
 from helper.calculate_cost import get_gemini_detailed_costs
 from helper.dataset_helper import DATA_ROOT, insert_documents_folder
 from helper.save_csv import save_to_csv
 from datetime import datetime
+from core.gemini import llm_tracker
+from core.embedding import embed_tracker
 
 MODEL = "gemini-2.5-flash-lite"
 
 
 async def run_gemini():
     configure_logging()
-    print("Starting System...")
+    print("Starting System Gemini...")
 
     rag = await init_gemini_lightRAG()
     storage_check_path = os.path.join(WORKING_DIR, "kv_store_full_text.json")
@@ -28,7 +30,12 @@ async def run_gemini():
 
         start_time = time.time()
 
-        await insert_documents_folder(rag, DATA_ROOT)
+        docs = await insert_documents_folder(MODEL, rag, DATA_ROOT, llm_tracker, embed_tracker)
+
+        weeks = sorted(set(d["week"] for d in docs if d["week"]))
+        dates = sorted(d["date"] for d in docs if d["date"])
+        week_range = f"{weeks[0]}-{weeks[-1]}" if weeks else "-"
+        date_range = f"{dates[0]} to {dates[-1]}" if dates else "-"
 
         end_time = time.time()
         latency = end_time - start_time
@@ -39,7 +46,7 @@ async def run_gemini():
             "timestamp": datetime.now().isoformat(),
             "model": MODEL,
             "mode": "INDEXING",
-            "question": f"Initial Ingest from {DATA_ROOT}",
+            "question": f"Initial Ingest {DATA_ROOT}-{week_range}-{date_range} ",
             "answer": "SUCCESS",
             "latency": latency,
             "llm_p_tokens": metrics["llm_p"],
@@ -58,7 +65,7 @@ async def run_gemini():
     question = "Apa judul pelajaran minggu kesatu?"
     print(f"\nAsking: {question}")
 
-    await answer_question(MODEL, rag, question)
+    await answer_question(MODEL, rag, question, llm_tracker, embed_tracker)
     await rag.finalize_storages()
     print("\nAll processes finished. Check your CSV for research data.")
 
