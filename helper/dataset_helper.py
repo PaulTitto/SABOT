@@ -16,7 +16,6 @@ def extract_doc_id(content: str) -> Optional[str]:
 
 INGEST_LOG = "ingest_log.csv"
 
-
 def extract_metadata(content: str):
     import re
     week = re.search(r'minggu:\s*(\d+)', content)
@@ -26,7 +25,6 @@ def extract_metadata(content: str):
         "week": week.group(1) if week else None,
         "date": date.group(1) if date else None,
     }
-
 
 def _init_ingest_log():
     if not os.path.exists(INGEST_LOG):
@@ -81,7 +79,6 @@ async def insert_documents_folder(MODEL, rag, root_dir: str, llm_tracker, embed_
         try:
             await rag.ainsert(content)
             status = "SUCCESS"
-
         except Exception as e:
             if "already exists" in str(e).lower():
                 status = "SKIPPED"
@@ -95,30 +92,32 @@ async def insert_documents_folder(MODEL, rag, root_dir: str, llm_tracker, embed_
             embed_tracker.get_usage()
         )
 
-        save_to_csv({
-            "timestamp": datetime.now().isoformat(),
-            "model": MODEL,
-            "mode": "INDEXING_PER_FILE",
-            "question": f"{doc_id} | week {meta['week']} | {meta['date']}",
-            "answer": status,
-            "latency": latency,
-            "llm_p_tokens": metrics["llm_p"],
-            "llm_c_tokens": metrics["llm_c"],
-            "embed_tokens": metrics["emb_p"],
-            "cost_llm": metrics["c_llm"],
-            "cost_embed": metrics["c_emb"],
-            "total_cost": metrics["total"],
-            "call_count": llm_tracker.get_usage().get("call_count", 0)
-        })
+        has_usage = metrics["total"] > 0
 
-        print(f"[{status}] {doc_id} | cost: ${metrics['total']:.6f}")
+        if status == "SUCCESS" and has_usage:
+            save_to_csv({
+                "timestamp": datetime.now().isoformat(),
+                "model": MODEL,
+                "mode": "INDEXING_PER_FILE",
+                "question": f"{doc_id} | week {meta['week']} | {meta['date']}",
+                "answer": status,
+                "latency": latency,
+                "llm_p_tokens": metrics["llm_p"],
+                "llm_c_tokens": metrics["llm_c"],
+                "embed_tokens": metrics["emb_p"],
+                "cost_llm": f"{metrics['c_llm']:.10f}",
+                "cost_embed": f"{metrics['c_emb']:.10f}",
+                "total_cost": f"{metrics['total']:.10f}",
+                "call_count": llm_tracker.get_usage().get("call_count", 0)
+            })
 
-        if status == "SUCCESS":
             ingested_docs.append({
                 "doc_id": doc_id,
                 "week": meta["week"],
                 "date": meta["date"]
             })
+
+        print(f"[{status}] {doc_id} | cost: ${metrics['total']:.10f}")
 
         await asyncio.sleep(0.2)
 

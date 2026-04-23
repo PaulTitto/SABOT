@@ -37,21 +37,23 @@ async def run_deepseek():
 
         metrics = get_deepseek_detailed_costs(llm_tracker.get_usage(), embed_tracker.get_usage())
 
-        save_to_csv({
-            "timestamp": datetime.now().isoformat(),
-            "model": MODEL,
-            "mode": "INDEXING",
-            "question": f"Initial Ingest {DATA_ROOT}-{week_range}-{date_range} ",
-            "answer": "SUCCESS",
-            "latency": latency,
-            "llm_p_tokens": metrics["llm_p"],
-            "llm_c_tokens": metrics["llm_c"],
-            "embed_tokens": metrics["emb_p"],
-            "cost_llm": metrics["c_llm"],
-            "cost_embed": metrics["c_emb"],
-            "total_cost": metrics["total"],
-            "call_count": llm_tracker.get_usage().get("call_count", 0)
-        })
+        has_usage = metrics["total"]>0
+        if has_usage:
+            save_to_csv({
+                "timestamp": datetime.now().isoformat(),
+                "model": MODEL,
+                "mode": "INDEXING",
+                "question": f"Initial Ingest {DATA_ROOT}-{week_range}-{date_range} ",
+                "answer": "SUCCESS",
+                "latency": latency,
+                "llm_p_tokens": f"{metrics["llm_p"]:.10f}",
+                "llm_c_tokens": f"{metrics["llm_c"]:.10f}",
+                "embed_tokens": f"{metrics["emb_p"]:.10f}",
+                "cost_llm": f"{metrics["c_llm"]:.10f}",
+                "cost_embed": f"{metrics["c_emb"]:.10f}",
+                "total_cost": f"{metrics["total"]:.10f}",
+                "call_count": llm_tracker.get_usage().get("call_count", 0)
+            })
         print(f"Indexing selesai dalam {latency:.2f}s. Biaya dicatat ke CSV.")
     else:
         print("--- DATABASE DITEMUKAN: Menggunakan data lama (Hemat Biaya) ---")
