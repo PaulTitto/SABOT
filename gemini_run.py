@@ -63,7 +63,8 @@ async def run_gemini():
     else:
         print("--- DATABASE DITEMUKAN: Menggunakan data lama (Hemat Biaya) ---")
 
-    question = "Apa judul pelajaran minggu kesatu?"
+    # question = "Apa judul pelajaran minggu kesatu?"
+    question = "Ayat  Judul pelajaran di triwulan ini apa"
     print(f"\nAsking: {question}")
 
     await answer_question(MODEL, rag, question, llm_tracker, embed_tracker)

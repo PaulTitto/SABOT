@@ -38,9 +38,8 @@ async def init_gemini_lightRAG():
         working_dir=WORKING_DIR,
         llm_model_func=gemini_llm_model_func,
         embedding_func=gemini_embedding_func,
-        llm_model_kwargs={"token_tracker": llm_tracker},
         enable_llm_cache=True,
-        llm_model_name="gemini-2.5-flash-lite"
+        llm_model_kwargs={"token_tracker": llm_tracker},
     )
     await rag.initialize_storages()
     return rag

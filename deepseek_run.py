@@ -58,7 +58,8 @@ async def run_deepseek():
     else:
         print("--- DATABASE DITEMUKAN: Menggunakan data lama (Hemat Biaya) ---")
 
-    question = "Ayat hafalan minggu ini apa"
+    # question = "Ayat hafalan minggu ini apa"
+    question = "Ayat  Judul pelajaran di triwulan ini apa"
     await answer_question(MODEL, rag, question, llm_tracker, embed_tracker)
     await  rag.finalize_storages()
     print("\nAll processes finished. Check your CSV for research data.")
@@ -76,7 +77,7 @@ async def export_data():
 
 if __name__ == "__main__":
     if not os.getenv("DEEP_SEEK_API_KEY"):
-        print("API Key Open AI tidak ditemukan! Setel di environment variable.")
+        print("API Key Deep Seek tidak ditemukan! Setel di environment variable.")
     else:
         try:
             asyncio.run(run_deepseek())
