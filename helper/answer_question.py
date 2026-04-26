@@ -3,7 +3,7 @@ import inspect
 import time
 from lightrag import QueryParam
 
-from helper.calculate_cost import get_gemini_detailed_costs
+from helper.calculate_cost import get_gemini_detailed_costs, get_openai_detailed_costs
 from helper.date_helper import extract_date_from_question, get_today_iso
 from helper.save_csv import save_to_csv
 
@@ -59,6 +59,8 @@ async def answer_question(model, rag, question, llm_tracker, embed_tracker) -> s
             metrics = get_deepseek_detailed_costs(llm_tracker.get_usage(), embed_tracker.get_usage())
         if  "gemini-2.5-flash-lite" in model.lower():
             metrics = get_gemini_detailed_costs(llm_tracker.get_usage(), embed_tracker.get_usage())
+        if  "gpt-4o-mini" in model.lower():
+            metrics = get_openai_detailed_costs(llm_tracker.get_usage(), embed_tracker.get_usage())
 
         save_to_csv({
             "timestamp": datetime.now().isoformat(),

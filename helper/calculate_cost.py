@@ -22,3 +22,7 @@ def get_gemini_detailed_costs(llm_usage, embed_usage):
 
 def get_deepseek_detailed_costs(llm_usage, embed_usage):
     return calculate_detailed_costs(llm_usage, embed_usage, 0.28, 0.42, 0.15)
+
+
+def get_openai_detailed_costs(llm_usage, embed_usage):
+    return calculate_detailed_costs(llm_usage, embed_usage, 0.15, 0.60, 0.15)
