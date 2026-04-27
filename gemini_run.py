@@ -46,7 +46,7 @@ async def run_gemini():
             save_to_csv({
                 "timestamp": datetime.now().isoformat(),
                 "model": MODEL,
-                "mode": "INDEXING",
+                "mode": f"INDEXING WORKING DIR: {WORKING_DIR}",
                 "question": f"Initial Ingest {DATA_ROOT}-{week_range}-{date_range} ",
                 "answer": "SUCCESS",
                 "latency": latency,

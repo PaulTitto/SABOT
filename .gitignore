@@ -28,6 +28,10 @@ Thumbs.db
 # Dataset besar (jika tidak ingin di-commit)
 2026/
 gemini_rag_storage/
+exp_batch_storage
+exp_separate_storage
+experiment/
+merged_gemini_rag_storage
 *.txt
 deep_seek_rag_storage
 openai_rag_storage

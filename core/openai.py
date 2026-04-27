@@ -97,7 +97,7 @@ async def openai_llm(
         prompt,
         system_prompt,
         token_tracker=token_tracker,
-        api_key=os.getenv("SUMO_POD_KEY"),
+        api_key=os.getenv("SUMO_POD_API_KEY"),
         base_url=os.getenv("SUMO_POD_BASE_URL"),
         stream=is_stream,
         **kwargs

@@ -67,7 +67,7 @@ async def run_openai():
 
 
 if __name__ == "__main__":
-    if not os.getenv("SUMO_POD_KEY"):
+    if not os.getenv("SUMO_POD_API_KEY"):
         print("API Key tidak ditemukan!")
     else:
         asyncio.run(run_openai())

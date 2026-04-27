@@ -4,11 +4,21 @@ import re
 import csv
 from datetime import datetime
 from typing import Optional
-from helper.calculate_cost import get_gemini_detailed_costs
+from helper.calculate_cost import get_gemini_detailed_costs, get_deepseek_detailed_costs, get_openai_detailed_costs
 from helper.save_csv import save_to_csv
 import time
 
 DATA_ROOT = "./data/"
+
+
+def get_cost_by_model(model: str, llm_usage: dict, embed_usage: dict) -> dict:
+    if "gemini" in model.lower():
+        return get_gemini_detailed_costs(llm_usage, embed_usage)
+    elif "deepseek" in model.lower():
+        return get_deepseek_detailed_costs(llm_usage, embed_usage)
+    elif "gpt" in model.lower():
+        return get_openai_detailed_costs(llm_usage, embed_usage)
+    return get_gemini_detailed_costs(llm_usage, embed_usage)
 
 def extract_doc_id(content: str) -> Optional[str]:
     match = re.search(r'^id:\s*(\S+)', content, re.MULTILINE)
@@ -49,76 +59,59 @@ def get_ingested_doc_ids() -> set:
         reader = csv.DictReader(f)
         return {row["doc_id"] for row in reader if row["status"] == "SUCCESS"}
 
-async def insert_documents_folder(MODEL, rag, root_dir: str, llm_tracker, embed_tracker):
-    files = []
 
+async def insert_documents_folder_optimized(MODEL, rag, root_dir: str, llm_tracker, embed_tracker):
+    files = []
     for dir_path, _, file_names in os.walk(root_dir):
         for f in file_names:
             if f.endswith(".txt"):
                 files.append(os.path.join(dir_path, f))
 
-    print(f"Ditemukan {len(files)} file")
+    print(f"Ditemukan {len(files)} file. Menyiapkan Batch Indexing...")
 
-    ingested_docs = []
+    all_contents = []
+    all_ids = []
+    all_file_paths = []
 
     for path in files:
         with open(path, "r", encoding="utf-8") as fp:
             content = fp.read().strip()
-
-        if not content:
-            continue
+        if not content: continue
 
         doc_id = extract_doc_id(content)
-        meta = extract_metadata(content)
+        all_contents.append(content)
+        all_ids.append(doc_id if doc_id else path)
+        all_file_paths.append(path)
 
-        llm_tracker.reset()
-        embed_tracker.reset()
+    llm_tracker.reset()
+    embed_tracker.reset()
+    start_time = time.time()
 
-        start_time = time.time()
+    try:
+        print(f"Memulai indexing {len(all_contents)} dokumen secara bersamaan...")
+        await rag.ainsert(input=all_contents, ids=all_ids, file_paths=all_file_paths)
+        status = "SUCCESS"
+    except Exception as e:
+        status = f"ERROR: {e}"
 
-        try:
-            await rag.ainsert(content)
-            status = "SUCCESS"
-        except Exception as e:
-            if "already exists" in str(e).lower():
-                status = "SKIPPED"
-            else:
-                status = f"ERROR: {e}"
+    latency = time.time() - start_time
+    metrics = get_cost_by_model(MODEL, llm_tracker.get_usage(), embed_tracker.get_usage())
 
-        latency = time.time() - start_time
+    save_to_csv({
+        "timestamp": datetime.now().isoformat(),
+        "model": MODEL,
+        "mode": "BATCH_INDEXING_WEEKLY",
+        "question": f"Batch Indexing: {len(all_contents)} files",
+        "answer": status,
+        "latency": latency,
+        "llm_p_tokens": metrics["llm_p"],
+        "llm_c_tokens": metrics["llm_c"],
+        "embed_tokens": metrics["emb_p"],
+        "cost_llm": f"{metrics['c_llm']:.10f}",
+        "cost_embed": f"{metrics['c_emb']:.10f}",
+        "total_cost": f"{metrics['total']:.10f}",
+        "call_count": llm_tracker.get_usage().get("call_count", 0)
+    })
 
-        metrics = get_gemini_detailed_costs(
-            llm_tracker.get_usage(),
-            embed_tracker.get_usage()
-        )
-
-        has_usage = metrics["total"] > 0
-
-        if status == "SUCCESS" and has_usage:
-            save_to_csv({
-                "timestamp": datetime.now().isoformat(),
-                "model": MODEL,
-                "mode": "INDEXING_PER_FILE",
-                "question": f"{doc_id} | week {meta['week']} | {meta['date']}",
-                "answer": status,
-                "latency": latency,
-                "llm_p_tokens": metrics["llm_p"],
-                "llm_c_tokens": metrics["llm_c"],
-                "embed_tokens": metrics["emb_p"],
-                "cost_llm": f"{metrics['c_llm']:.10f}",
-                "cost_embed": f"{metrics['c_emb']:.10f}",
-                "total_cost": f"{metrics['total']:.10f}",
-                "call_count": llm_tracker.get_usage().get("call_count", 0)
-            })
-
-            ingested_docs.append({
-                "doc_id": doc_id,
-                "week": meta["week"],
-                "date": meta["date"]
-            })
-
-        print(f"[{status}] {doc_id} | cost: ${metrics['total']:.10f}")
-
-        await asyncio.sleep(0.2)
-
-    return ingested_docs
+    print(f"[{status}] Batch Indexing Selesai | Total Cost: ${metrics['total']:.10f}")
+    return all_ids
