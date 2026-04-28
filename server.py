@@ -70,7 +70,14 @@ async def ask(req: AskRequest):
             mode="hybrid",
             top_k=5,
             stream=True,
-            user_prompt="Anda adalah asisten kurikulum Sekolah Sabat. Jawab berdasarkan fakta di database secara sistematis.",
+            user_prompt=(
+                "Anda adalah pakar studi Sekolah Sabat. "
+                "Berikan jawaban yang mendalam namun ringkas. "
+                "Setiap poin informasi yang Anda berikan harus diikuti dengan DOC id yang relevan di dalam kurung. "
+                "Contoh: 'Tujuan pelajaran minggu ini adalah X (DOC id: 2026-q2-w01-d1)'. "
+                "menggunakan kurung siku, contoh: [2026-q2-w01-d1]."
+                "Pastikan format referensi selalu mengikuti pola: YYYY-qX-wXX-dX."
+            )
         )
         llm_tracker.reset()
         embed_tracker.reset()
@@ -87,10 +94,9 @@ async def ask(req: AskRequest):
     return StreamingResponse(generate(), media_type="text/plain; charset=utf-8")
 
 
-@app.get("/")
-async def health():
+@app.get("/health")
+async def health_check():
     return {"status": "ok", "rag_ready": rag is not None}
-
 if os.path.exists("static"):
     app.mount("/", StaticFiles(directory="static", html=True), name="static")
 else:

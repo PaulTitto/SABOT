@@ -14,6 +14,7 @@
             --border: rgba(28,26,20,0.1); --user-bg: #1C1A14; --user-text: #F8F5EF;
             --bot-bg: #FFFFFF; --bot-border: rgba(28,26,20,0.08);
             --radius: 16px; --radius-sm: 10px;
+            --blue: #1a73e8; --blue-light: #e8f0fe; --blue-border: #c5d8fd;
         }
         @media (prefers-color-scheme: dark) {
             :root {
@@ -21,62 +22,265 @@
                 --ink-muted: #9B9484; --ink-faint: #454035;
                 --user-bg: #F0EDE4; --user-text: #1C1A14;
                 --bot-bg: #1E1C16; --bot-border: rgba(240,237,228,0.06);
+                --blue-light: #1a2a3a; --blue-border: #2a4a6a;
             }
         }
-        body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--ink); height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
-        header { padding: 16px 24px; display: flex; align-items: center; gap: 12px; border-bottom: 0.5px solid var(--border); background: var(--surface); flex-shrink: 0; }
-        .logo-mark { width: 36px; height: 36px; background: var(--ink); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg); color: var(--ink);
+            height: 100dvh; display: flex; flex-direction: column; overflow: hidden;
+        }
+
+        /* ── Header ── */
+        header {
+            padding: 16px 24px; display: flex; align-items: center; gap: 12px;
+            border-bottom: 0.5px solid var(--border); background: var(--surface); flex-shrink: 0;
+        }
+        .logo-mark {
+            width: 36px; height: 36px; background: var(--ink); border-radius: 10px;
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
         .logo-mark svg { width: 18px; height: 18px; fill: var(--bg); }
         .header-title { font-family: 'DM Serif Display', serif; font-size: 18px; line-height: 1.2; }
         .header-sub { font-size: 12px; color: var(--ink-muted); }
-        .status-pill { margin-left: auto; display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--ink-muted); background: var(--bg); border: 0.5px solid var(--border); border-radius: 20px; padding: 5px 12px; }
+        .status-pill {
+            margin-left: auto; display: flex; align-items: center; gap: 6px;
+            font-size: 12px; color: var(--ink-muted); background: var(--bg);
+            border: 0.5px solid var(--border); border-radius: 20px; padding: 5px 12px;
+        }
         .status-dot { width: 7px; height: 7px; border-radius: 50%; background: #ff4d4d; transition: background 0.4s; }
         .status-dot.ready { background: #4CAF50; }
 
-        #chat { flex: 1; overflow-y: auto; padding: 24px 0; display: flex; flex-direction: column; scroll-behavior: smooth; }
-        .message-wrap { display: flex; flex-direction: column; align-items: flex-start; padding: 8px 24px; max-width: 850px; width: 100%; margin: 0 auto; }
+        /* ── Chat ── */
+        #chat {
+            flex: 1; overflow-y: auto; padding: 24px 0;
+            display: flex; flex-direction: column; scroll-behavior: smooth;
+        }
+        .message-wrap {
+            display: flex; flex-direction: column; align-items: flex-start;
+            padding: 8px 24px; max-width: 850px; width: 100%; margin: 0 auto;
+        }
         .message-wrap.user { align-items: flex-end; }
-        .bubble { max-width: 85%; padding: 12px 18px; border-radius: var(--radius); font-size: 15px; line-height: 1.6; }
-        .bubble.user { background: var(--user-bg); color: var(--user-text); border-bottom-right-radius: 4px; }
-        .bubble.bot { background: var(--bot-bg); color: var(--ink); border: 0.5px solid var(--bot-border); border-bottom-left-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        .bubble {
+            max-width: 85%; padding: 12px 18px; border-radius: var(--radius);
+            font-size: 15px; line-height: 1.6;
+        }
+        .bubble.user {
+            background: var(--user-bg); color: var(--user-text);
+            border-bottom-right-radius: 4px;
+        }
+        .bubble.bot {
+            background: var(--bot-bg); color: var(--ink);
+            border: 0.5px solid var(--bot-border);
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
 
-        /* Markdown Styling inside bubble */
+        /* Markdown inside bubble */
         .bubble.bot p { margin-bottom: 8px; }
+        .bubble.bot p:last-child { margin-bottom: 0; }
         .bubble.bot ul, .bubble.bot ol { margin-left: 20px; margin-bottom: 8px; }
+        .bubble.bot strong { font-weight: 600; }
+        .bubble.bot h1, .bubble.bot h2, .bubble.bot h3 {
+            font-family: 'DM Serif Display', serif;
+            margin: 12px 0 6px;
+        }
 
-        .bubble.streaming::after { content: '●'; animation: pulse 1s infinite; color: var(--gold); margin-left: 4px; }
+        /* Streaming cursor */
+        .bubble.streaming::after {
+            content: '●'; animation: pulse 1s infinite; color: var(--gold); margin-left: 4px;
+        }
         @keyframes pulse { 0% { opacity: 0.2; } 50% { opacity: 1; } 100% { opacity: 0.2; } }
 
         .meta { font-size: 10px; color: var(--ink-faint); margin-top: 4px; }
-        .welcome { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 24px; }
+
+        /* ── Welcome ── */
+        .welcome {
+            flex: 1; display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            text-align: center; padding: 24px;
+        }
         .suggestions { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 20px; }
-        .suggestion { background: var(--surface); border: 0.5px solid var(--border); border-radius: 20px; padding: 8px 16px; font-size: 13px; cursor: pointer; transition: 0.2s; }
+        .suggestion {
+            background: var(--surface); border: 0.5px solid var(--border);
+            border-radius: 20px; padding: 8px 16px; font-size: 13px;
+            cursor: pointer; transition: 0.2s; color: var(--ink); font-family: inherit;
+        }
         .suggestion:hover { border-color: var(--gold); background: var(--bg); }
 
+        /* ── Input ── */
         .input-area { padding: 16px 24px 24px; background: var(--bg); border-top: 0.5px solid var(--border); }
-        .input-row { display: flex; gap: 10px; align-items: flex-end; max-width: 800px; margin: 0 auto; background: var(--surface); border: 0.5px solid var(--border); border-radius: 16px; padding: 10px 12px; }
-        #question { flex: 1; background: transparent; border: none; outline: none; font-family: inherit; font-size: 15px; resize: none; max-height: 150px; min-height: 24px; }
-        #sendBtn { width: 38px; height: 38px; background: var(--ink); border: none; border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
-        #sendBtn:disabled { opacity: 0.3; }
+        .input-row {
+            display: flex; gap: 10px; align-items: flex-end;
+            max-width: 800px; margin: 0 auto;
+            background: var(--surface); border: 0.5px solid var(--border);
+            border-radius: 16px; padding: 10px 12px;
+        }
+        #question {
+            flex: 1; background: transparent; border: none; outline: none;
+            font-family: inherit; font-size: 15px; resize: none;
+            max-height: 150px; min-height: 24px; color: var(--ink);
+        }
+        #question::placeholder { color: var(--ink-faint); }
+        #sendBtn {
+            width: 38px; height: 38px; background: var(--ink); border: none;
+            border-radius: 12px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: 0.2s; flex-shrink: 0;
+        }
+        #sendBtn:disabled { opacity: 0.3; cursor: not-allowed; }
+        #sendBtn:not(:disabled):hover { transform: scale(1.05); }
         #sendBtn svg { width: 18px; height: 18px; fill: var(--bg); }
+
+        /* ── Citation Badge ── */
+        .citation-badge {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 3px 9px;
+            background: var(--blue-light);
+            color: var(--blue);
+            border: 1px solid var(--blue-border);
+            border-radius: 12px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            vertical-align: middle;
+            margin: 0 2px;
+            transition: background 0.15s, transform 0.1s;
+            font-family: 'DM Sans', sans-serif;
+            white-space: nowrap;
+        }
+        .citation-badge:hover {
+            background: var(--blue-border);
+            transform: translateY(-1px);
+        }
+        .citation-badge .cite-icon { font-size: 0.75rem; }
+        .citation-badge .cite-label { letter-spacing: 0.01em; }
+
+        /* ── Source Panel (slide in from right) ── */
+        #source-overlay {
+            display: none;
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.35);
+            z-index: 1000;
+            justify-content: flex-end;
+        }
+        #source-overlay.open { display: flex; }
+        #source-panel {
+            width: min(440px, 100vw);
+            height: 100%;
+            background: var(--surface);
+            display: flex; flex-direction: column;
+            box-shadow: -4px 0 32px rgba(0,0,0,0.12);
+            transform: translateX(100%);
+            transition: transform 0.28s cubic-bezier(0.32, 0.72, 0, 1);
+        }
+        #source-overlay.open #source-panel { transform: translateX(0); }
+
+        .panel-header {
+            display: flex; justify-content: space-between; align-items: flex-start;
+            padding: 20px 20px 16px;
+            border-bottom: 0.5px solid var(--border);
+            background: var(--surface);
+        }
+        .panel-date { font-size: 11px; color: var(--ink-muted); margin-bottom: 4px; }
+        .panel-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.15rem; color: var(--ink); line-height: 1.3;
+        }
+        .panel-actions { display: flex; gap: 8px; margin-left: 12px; flex-shrink: 0; }
+        .btn-icon {
+            background: var(--bg); border: 0.5px solid var(--border);
+            border-radius: 8px; padding: 6px 10px;
+            cursor: pointer; font-size: 0.9rem; color: var(--ink);
+            text-decoration: none; display: flex; align-items: center;
+            transition: background 0.15s;
+        }
+        .btn-icon:hover { background: var(--border); }
+
+        .panel-body {
+            flex: 1; overflow-y: auto; padding: 20px;
+            font-size: 0.9rem; line-height: 1.75; color: var(--ink);
+        }
+        .panel-body p { margin-bottom: 10px; }
+        .panel-body h3 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1rem; margin: 16px 0 6px; color: var(--ink);
+        }
+        .panel-loading {
+            display: flex; align-items: center; justify-content: center;
+            height: 120px; color: var(--ink-muted); font-size: 0.875rem; gap: 8px;
+        }
+        .panel-spinner {
+            width: 16px; height: 16px; border: 2px solid var(--ink-faint);
+            border-top-color: var(--blue); border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .panel-footer {
+            padding: 14px 20px; border-top: 0.5px solid var(--border);
+        }
+        .btn-full {
+            display: block; text-align: center;
+            background: var(--ink); color: var(--bg);
+            padding: 11px; border-radius: 10px;
+            text-decoration: none; font-weight: 500; font-size: 0.875rem;
+            transition: opacity 0.15s;
+        }
+        .btn-full:hover { opacity: 0.85; }
+        .panel-error { color: #c0392b; font-size: 0.875rem; padding: 12px 0; }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="logo-mark"><svg viewBox="0 0 24 24"><path d="M12 2L3 7v10l9 5 9-5V7L12 2zm0 2.24L19 8.5l-7 3.88L5 8.5l7-4.26z"/></svg></div>
-    <div><div class="header-title">Sekolah Sabat</div><div class="header-sub">SABOT: Sekolah Sabat AI Bot Optimized Technology.</div></div>
-    <div class="status-pill"><div class="status-dot" id="statusDot"></div><span id="statusText">Menghubungkan...</span></div>
+    <div class="logo-mark">
+        <svg viewBox="0 0 24 24"><path d="M12 2L3 7v10l9 5 9-5V7L12 2zm0 2.24L19 8.5l-7 3.88L5 8.5l7-4.26z"/></svg>
+    </div>
+    <div>
+        <div class="header-title">Sekolah Sabat</div>
+        <div class="header-sub">SABOT · Sekolah Sabat AI Bot</div>
+    </div>
+    <div class="status-pill">
+        <div class="status-dot" id="statusDot"></div>
+        <span id="statusText">Menghubungkan...</span>
+    </div>
 </header>
 
 <div id="chat">
     <div class="welcome" id="welcome">
-        <h1 style="font-family: 'DM Serif Display'; font-size: 28px;">Halo, Paulus!</h1>
-        <p style="color: var(--ink-muted); margin-top: 8px;">Ada yang ingin digali dari pelajaran hari ini?</p>
+        <h1 style="font-family:'DM Serif Display';font-size:28px;">Halo, Paulus!</h1>
+        <p style="color:var(--ink-muted);margin-top:8px;">Ada yang ingin digali dari pelajaran hari ini?</p>
         <div class="suggestions">
             <button class="suggestion" onclick="ask('Apa tema utama triwulan ini?')">Tema Triwulan</button>
             <button class="suggestion" onclick="ask('Rangkumkan pelajaran hari ini')">Pelajaran Hari Ini</button>
             <button class="suggestion" onclick="ask('Apa ayat hafalan minggu ini?')">Ayat Hafalan</button>
+        </div>
+    </div>
+</div>
+
+<!-- Source Panel -->
+<div id="source-overlay" onclick="closePanel(event)">
+    <div id="source-panel">
+        <div class="panel-header">
+            <div>
+                <div class="panel-date" id="panel-date"></div>
+                <div class="panel-title" id="panel-title">Memuat...</div>
+            </div>
+            <div class="panel-actions">
+                <a id="panel-web-link" href="#" target="_blank" class="btn-icon" title="Buka di website">↗</a>
+                <button class="btn-icon" onclick="closePanel()" title="Tutup">✕</button>
+            </div>
+        </div>
+        <div class="panel-body" id="panel-body">
+            <div class="panel-loading"><div class="panel-spinner"></div> Memuat pelajaran...</div>
+        </div>
+        <div class="panel-footer">
+            <a id="panel-footer-link" href="#" target="_blank" class="btn-full">
+                Baca Selengkapnya di Sabbath School ↗
+            </a>
         </div>
     </div>
 </div>
@@ -94,44 +298,162 @@
     const API = 'http://localhost:8000';
     let isStreaming = false;
 
-    async function checkHealth() {
+    // ── Citation: parse doc_id ─────────────────────────────────────────────
+    function parseDocId(docId) {
+    const m = docId.match(/(\d{4})-q(\d+)-w(\d+)-d(\d+)/);
+    if (!m) return null;
 
-    try {
-        const r = await fetch(API + '/health');
-        const d = await r.json();
+    const year = m[1];
+    const quarter = m[2].padStart(2, '0');
+    const week = m[3].padStart(2, '0');
+    const day = m[4].padStart(2, '0');
 
-        if (d.rag_ready) {
-            document.getElementById('statusDot').classList.add('ready');
-            document.getElementById('statusText').textContent = 'Sistem Siap';
-            document.getElementById('sendBtn').disabled = false;
-        } else {
-            document.getElementById('statusText').textContent = 'Inisialisasi RAG...';
-        }
-    } catch (e) {
-        console.error("Health check failed:", e);
-        document.getElementById('statusText').textContent = 'Server Offline';
-        setTimeout(checkHealth, 3000);
-    }
+    const quarterlyId = `${year}-${quarter}`;
+
+    return {
+        label: `Mg ${parseInt(week)} · Hr ${parseInt(day)}`,
+        webUrl: `https://sabbath-school.adventech.io/in/${quarterlyId}/${week}/${day}`,
+        apiUrl: `https://sabbath-school.adventech.io/api/v2/in/quarterlies/${quarterlyId}/lessons/${week}/days/${day}/read/index.json`,
+    };
 }
+
+    // Ganti [2026-q2-w01-d1] di HTML string → citation badge
+    function injectCitations(html) {
+        return html.replace(/\[(\d{4}-q\d+-w\d+-d\d+)\]/g, (_, docId) => {
+            const p = parseDocId(docId);
+            if (!p) return `[${docId}]`;
+            return `<a class="citation-badge" href="javascript:void(0)"
+                        onclick="openSource('${docId}')"
+                        title="${docId}">
+                        <span class="cite-icon">📖</span>
+                        <span class="cite-label">${p.label}</span>
+                    </a>`;
+        });
+    }
+
+    // ── Source Panel ────────────────────────────────────────────────────────
+    async function openSource(docId) {
+        const p = parseDocId(docId);
+        if (!p) return;
+
+        // Reset panel
+        document.getElementById('panel-date').textContent = '';
+        document.getElementById('panel-title').textContent = 'Memuat...';
+        document.getElementById('panel-body').innerHTML =
+            '<div class="panel-loading"><div class="panel-spinner"></div> Memuat pelajaran...</div>';
+        document.getElementById('panel-web-link').href = p.webUrl;
+        document.getElementById('panel-footer-link').href = p.webUrl;
+
+        // Buka overlay
+        const overlay = document.getElementById('source-overlay');
+        overlay.classList.add('open');
+        document.body.style.overflow = 'hidden';
+
+        // Fetch data
+        try {
+            const res = await fetch(p.apiUrl);
+            if (!res.ok) throw new Error('Tidak dapat memuat data.');
+            const data = await res.json();
+            renderPanel(data, p.webUrl);
+        } catch (e) {
+            document.getElementById('panel-title').textContent = 'Gagal memuat';
+            document.getElementById('panel-body').innerHTML =
+                `<p class="panel-error">⚠️ ${e.message}</p>
+                 <p style="font-size:0.85rem;color:var(--ink-muted);margin-top:8px;">
+                    Coba buka langsung di website Sabbath School.</p>`;
+        }
+    }
+
+    function renderPanel(data, webUrl) {
+        // Struktur API: data.day atau data langsung
+        const day = data.day || data;
+
+        document.getElementById('panel-date').textContent = day.date || '';
+        document.getElementById('panel-title').textContent = day.title || 'Pelajaran';
+
+        const body = document.getElementById('panel-body');
+
+        // Render blocks kalau ada
+        if (day.blocks && day.blocks.length > 0) {
+            body.innerHTML = day.blocks.map(block => {
+                switch (block.type) {
+                    case 'heading':
+                        return `<h3>${block.data?.text || ''}</h3>`;
+                    case 'paragraph':
+                        return `<p>${block.data?.text || ''}</p>`;
+                    case 'reference':
+                    case 'blockquote':
+                        return `<blockquote style="border-left:3px solid var(--gold);padding:8px 14px;
+                                    margin:10px 0;background:var(--bg);font-style:italic;
+                                    font-size:0.875rem;border-radius:0 6px 6px 0;">
+                                    ${block.data?.text || ''}</blockquote>`;
+                    default:
+                        return block.data?.text ? `<p>${block.data.text}</p>` : '';
+                }
+            }).join('');
+        } else if (day.content) {
+            // Fallback: plain text / markdown
+            body.innerHTML = marked.parse(day.content);
+        } else {
+            body.innerHTML = `<p style="color:var(--ink-muted);font-size:0.875rem;">
+                Konten tersedia di website Sabbath School.</p>`;
+        }
+    }
+
+    function closePanel(e) {
+        // Tutup hanya kalau klik overlay (bukan panel-nya)
+        if (e && e.target !== document.getElementById('source-overlay')) return;
+        const overlay = document.getElementById('source-overlay');
+        overlay.classList.remove('open');
+        document.body.style.overflow = '';
+    }
+    // Tombol ✕ langsung tutup
+    function closePanelDirect() {
+        document.getElementById('source-overlay').classList.remove('open');
+        document.body.style.overflow = '';
+    }
+    // Patch tombol tutup
+    document.querySelector('#source-panel .btn-icon:last-child')
+        .addEventListener('click', closePanelDirect);
+
+    // ESC untuk tutup panel
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') closePanelDirect();
+    });
+
+    // ── Health Check ────────────────────────────────────────────────────────
+    async function checkHealth() {
+        try {
+            const r = await fetch(API + '/health');
+            const d = await r.json();
+            if (d.rag_ready) {
+                document.getElementById('statusDot').classList.add('ready');
+                document.getElementById('statusText').textContent = 'Sistem Siap';
+                document.getElementById('sendBtn').disabled = false;
+            } else {
+                document.getElementById('statusText').textContent = 'Inisialisasi RAG...';
+                setTimeout(checkHealth, 3000);
+            }
+        } catch (e) {
+            document.getElementById('statusText').textContent = 'Server Offline';
+            setTimeout(checkHealth, 3000);
+        }
+    }
 
     function ask(text) {
         document.getElementById('question').value = text;
         sendQuestion();
     }
 
-    function addMessage(role, text, isBot = false) {
+    function addMessage(role, text) {
         document.getElementById('welcome')?.remove();
         const chat = document.getElementById('chat');
         const wrap = document.createElement('div');
         wrap.className = `message-wrap ${role}`;
-
         const bubble = document.createElement('div');
-        bubble.className = `bubble ${role} ${isBot ? 'streaming' : ''}`;
-
-        if (role === 'user') {
-            bubble.textContent = text;
-        }
-
+        bubble.className = `bubble ${role}`;
+        if (role === 'user') bubble.textContent = text;
+        if (role === 'bot') bubble.classList.add('streaming');
         wrap.appendChild(bubble);
         chat.appendChild(wrap);
         chat.scrollTop = chat.scrollHeight;
@@ -150,7 +472,7 @@
         document.getElementById('sendBtn').disabled = true;
 
         addMessage('user', q);
-        const botBubble = addMessage('bot', '', true);
+        const botBubble = addMessage('bot', '');
 
         try {
             const resp = await fetch(API + '/ask', {
@@ -167,12 +489,13 @@
                 const { done, value } = await reader.read();
                 if (done) break;
                 fullText += decoder.decode(value, { stream: true });
-                // Gunakan marked untuk render markdown secara real-time
-                botBubble.innerHTML = marked.parse(fullText);
+
+                const rendered = marked.parse(fullText);
+                botBubble.innerHTML = injectCitations(rendered);
                 document.getElementById('chat').scrollTop = document.getElementById('chat').scrollHeight;
             }
         } catch (e) {
-            botBubble.textContent = "Maaf, terjadi gangguan koneksi ke server.";
+            botBubble.textContent = 'Maaf, terjadi gangguan koneksi ke server.';
         } finally {
             isStreaming = false;
             botBubble.classList.remove('streaming');
@@ -180,21 +503,19 @@
 
             const meta = document.createElement('div');
             meta.className = 'meta';
-            meta.textContent = new Date().toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'}) + " • RAG Hybrid";
+            meta.textContent =
+                new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
+                + ' • RAG Hybrid';
             botBubble.parentNode.appendChild(meta);
         }
     }
 
-    document.getElementById('question').addEventListener('input', function() {
+    document.getElementById('question').addEventListener('input', function () {
         this.style.height = 'auto';
-        this.style.height = (this.scrollHeight) + 'px';
+        this.style.height = this.scrollHeight + 'px';
     });
-
-    document.getElementById('question').addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            sendQuestion();
-        }
+    document.getElementById('question').addEventListener('keydown', e => {
+        if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendQuestion(); }
     });
 
     checkHealth();
