@@ -4,21 +4,15 @@ import re
 import csv
 from datetime import datetime
 from typing import Optional
-from helper.calculate_cost import get_gemini_detailed_costs, get_deepseek_detailed_costs, get_openai_detailed_costs
+from helper.calculate_cost import get_gemini_detailed_costs, get_deepseek_detailed_costs, get_openai_detailed_costs, \
+    get_cost_by_model
 from helper.save_csv import save_to_csv
 import time
 
 DATA_ROOT = "./data/"
 
 
-def get_cost_by_model(model: str, llm_usage: dict, embed_usage: dict) -> dict:
-    if "gemini" in model.lower():
-        return get_gemini_detailed_costs(llm_usage, embed_usage)
-    elif "deepseek" in model.lower():
-        return get_deepseek_detailed_costs(llm_usage, embed_usage)
-    elif "gpt" in model.lower():
-        return get_openai_detailed_costs(llm_usage, embed_usage)
-    return get_gemini_detailed_costs(llm_usage, embed_usage)
+
 
 def extract_doc_id(content: str) -> Optional[str]:
     match = re.search(r'^id:\s*(\S+)', content, re.MULTILINE)
@@ -60,7 +54,7 @@ def get_ingested_doc_ids() -> set:
         return {row["doc_id"] for row in reader if row["status"] == "SUCCESS"}
 
 
-async def insert_documents_folder_optimized(MODEL, rag, root_dir: str, llm_tracker, embed_tracker):
+async def insert_documents_folder(MODEL, rag, root_dir: str, llm_tracker, embed_tracker):
     files = []
     for dir_path, _, file_names in os.walk(root_dir):
         for f in file_names:
@@ -72,6 +66,7 @@ async def insert_documents_folder_optimized(MODEL, rag, root_dir: str, llm_track
     all_contents = []
     all_ids = []
     all_file_paths = []
+    metadata_results = []  # Tambahkan penampung metadata
 
     for path in files:
         with open(path, "r", encoding="utf-8") as fp:
@@ -79,9 +74,13 @@ async def insert_documents_folder_optimized(MODEL, rag, root_dir: str, llm_track
         if not content: continue
 
         doc_id = extract_doc_id(content)
+        # Ambil metadata (week dan date) menggunakan fungsi yang sudah kamu buat
+        meta = extract_metadata(content)
+
         all_contents.append(content)
         all_ids.append(doc_id if doc_id else path)
         all_file_paths.append(path)
+        metadata_results.append(meta)  # Masukkan metadata ke list
 
     llm_tracker.reset()
     embed_tracker.reset()
@@ -114,4 +113,5 @@ async def insert_documents_folder_optimized(MODEL, rag, root_dir: str, llm_track
     })
 
     print(f"[{status}] Batch Indexing Selesai | Total Cost: ${metrics['total']:.10f}")
-    return all_ids
+
+    return metadata_results

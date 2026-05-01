@@ -41,7 +41,13 @@ def download_and_save_data(y: int, q: int, w: int, tema_triwulan: str):
 
             ayat_isi = meta.get('ayat_hafalan', '')
             ayat_ref = ""
-
+            ayat_section = ""
+            if ayat_ref.strip() or ayat_isi.strip():
+                ayat_section = f"""
+            [AYAT]
+            hafalan: {ayat_ref}
+            isi_ayat: {ayat_isi}
+            """
             if ayat_isi:
                 ref_match = re.search(r'[\(（]([^\)）]+)[\)）]', ayat_isi)
                 if ref_match:
@@ -50,7 +56,6 @@ def download_and_save_data(y: int, q: int, w: int, tema_triwulan: str):
             else:
                 ayat_isi, ayat_ref = memorized_verses(clean_text)
 
-            # Moved outside the if block
             doc_id = f"{y}-q{q}-w{w:02d}-d{d}"
             dataset = f"""
 [DOC]
@@ -65,11 +70,7 @@ judul: {judul}
 judul_harian: {judul.lower()}
 tema_mingguan: {tema_mingguan}
 tema_triwulan: {tema_triwulan}
-
-[AYAT]
-hafalan: {ayat_ref}
-isi_ayat: {ayat_isi}
-
+{ayat_section}
 [ISI]
 {clean_text}
 """

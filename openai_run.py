@@ -11,7 +11,7 @@ from helper.calculate_cost import get_openai_detailed_costs
 from helper.dataset_helper import DATA_ROOT, insert_documents_folder
 from helper.save_csv import save_to_csv
 
-MODEL = "gpt-4o-mini"
+MODEL = "gpt-4.1-mini"
 
 
 async def run_openai():
@@ -67,7 +67,7 @@ async def run_openai():
 
 
 if __name__ == "__main__":
-    if not os.getenv("SUMO_POD_API_KEY"):
+    if not os.getenv("OPENAI_API_KEY"):
         print("API Key tidak ditemukan!")
     else:
         asyncio.run(run_openai())

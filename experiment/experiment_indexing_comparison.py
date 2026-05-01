@@ -1,15 +1,4 @@
-"""
-experiment_indexing_comparison.py (v3.0 - Fixed)
-Eksperimen perbandingan strategi indexing untuk skripsi SABOT:
-- Strategi A: SEPARATE  — insert harian satu per satu (sequential)
-- Strategi B: MERGE     — gabung semua konten jadi satu dokumen, insert sekali
-- Strategi C: BATCH     — insert list dokumen sekaligus via ainsert(list) (LightRAG native batch)
 
-Fix:
-- Token tracker menggunakan closure pattern (sesuai dokumentasi resmi LightRAG dev branch)
-- Batch menggunakan ainsert(list) bukan asyncio.gather (ini batch LightRAG yang sebenarnya)
-- Cost hanya dari LLM tokens, embedding dipisah dan tidak dicampur
-"""
 
 import asyncio
 import os
@@ -34,7 +23,6 @@ MODEL = "gemini-2.5-flash-lite"
 EXPERIMENT_CSV = "experiment_indexing_comparison.csv"
 
 
-# --- Closure Pattern (Dokumentasi Resmi LightRAG dev branch) ---
 def make_llm_func(tracker: TokenTracker):
     """
     Buat LLM function dengan tracker di-capture via closure.
@@ -94,7 +82,6 @@ async def experiment_separate():
 
     cleanup_dir(WORKING_DIR_SEPARATE)
 
-    # Buat tracker baru dan llm_func dengan closure
     llm_tracker = TokenTracker()
     llm_func = make_llm_func(llm_tracker)
 
@@ -104,7 +91,6 @@ async def experiment_separate():
         llm_model_func=llm_func,
         embedding_func=gemini_embedding_func,
         enable_llm_cache=False,
-        # Tidak perlu llm_model_kwargs — tracker via closure
     )
     await rag.initialize_storages()
 
