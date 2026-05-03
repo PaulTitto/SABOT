@@ -41,14 +41,14 @@ LLM_CONFIGS = {
     #     "output_cost_per_million": 0.40,
     #     "cost_func": get_gemini_detailed_costs,
     # },
-    "deepseek-chat": {
-        "name": "DeepSeek V4 Flash",
-        "developer": "DeepSeek AI",
-        "context_window": 1000000,
-        "input_cost_per_million": 0.14,
-        "output_cost_per_million": 0.28,
-        "cost_func": get_deepseek_detailed_costs,
-    },
+    # "deepseek-v4-flash": {
+    #     "name": "DeepSeek V4 Flash",
+    #     "developer": "DeepSeek AI",
+    #     "context_window": 1000000,
+    #     "input_cost_per_million": 0.14,
+    #     "output_cost_per_million": 0.28,
+    #     "cost_func": get_deepseek_detailed_costs,
+    # },
     "gpt-4.1-mini": {
         "name": "GPT-4.1 Mini",
         "developer": "OpenAI",
@@ -60,14 +60,14 @@ LLM_CONFIGS = {
 }
 
 WORKING_DIRS = {
-    ("separate", "gemini-2.5-flash-lite"): "../exp_separate_gemini",
-    ("separate", "deepseek-chat"):      "../exp_separate_deepseek",
+    # ("separate", "gemini-2.5-flash-lite"): "../exp_separate_gemini",
+    ("separate", "deepseek-v4-flash"):      "../exp_separate_deepseek",
     ("separate", "gpt-4.1-mini"):           "../exp_separate_gpt4",
     ("merge",    "gemini-2.5-flash-lite"):  "../exp_merge_gemini",
-    ("merge",    "deepseek-chat"):      "../exp_merge_deepseek",
+    ("merge",    "deepseek-v4-flash"):      "../exp_merge_deepseek",
     ("merge",    "gpt-4.1-mini"):           "../exp_merge_gpt4",
     ("batch",    "gemini-2.5-flash-lite"):  "../exp_batch_gemini",
-    ("batch",    "deepseek-chat"):      "../exp_batch_deepseek",
+    ("batch",    "deepseek-v4-flash"):      "../exp_batch_deepseek",
     ("batch",    "gpt-4.1-mini"):           "../exp_batch_gpt4",
 }
 
@@ -168,7 +168,7 @@ def _pick_llm_func(model_key: str):
     """Return the correct pre-built LLM function for a model key."""
     if model_key == "gpt-4.1-mini":
         return openai_llm
-    elif model_key == "deepseek-chat":
+    elif model_key == "deepseek-v4-flash":
         return deepseek_llm
     elif model_key == "gemini-2.5-flash-lite":
         return gemini_llm_model_func

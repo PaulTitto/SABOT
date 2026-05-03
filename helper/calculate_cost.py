@@ -30,7 +30,7 @@ def get_openai_detailed_costs(llm_usage, embed_usage):
 def get_cost_by_model(model: str, llm_usage: dict, embed_usage: dict) -> dict:
     if "gemini-2.5-flash-lite" in model.lower():
         return get_gemini_detailed_costs(llm_usage, embed_usage)
-    elif "deepseek-chat" in model.lower():
+    elif "deepseek-v4-flash" in model.lower():
         return get_deepseek_detailed_costs(llm_usage, embed_usage)
     elif "gpt-4.1-mini" in model.lower():
         return get_openai_detailed_costs(llm_usage, embed_usage)
