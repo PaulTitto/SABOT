@@ -1,4 +1,3 @@
-import asyncio
 import os.path
 import re
 import csv
@@ -66,7 +65,7 @@ async def insert_documents_folder(MODEL, rag, root_dir: str, llm_tracker, embed_
     all_contents = []
     all_ids = []
     all_file_paths = []
-    metadata_results = []  # Tambahkan penampung metadata
+    metadata_results = []
 
     for path in files:
         with open(path, "r", encoding="utf-8") as fp:
@@ -74,13 +73,12 @@ async def insert_documents_folder(MODEL, rag, root_dir: str, llm_tracker, embed_
         if not content: continue
 
         doc_id = extract_doc_id(content)
-        # Ambil metadata (week dan date) menggunakan fungsi yang sudah kamu buat
         meta = extract_metadata(content)
 
         all_contents.append(content)
         all_ids.append(doc_id if doc_id else path)
         all_file_paths.append(path)
-        metadata_results.append(meta)  # Masukkan metadata ke list
+        metadata_results.append(meta)
 
     llm_tracker.reset()
     embed_tracker.reset()

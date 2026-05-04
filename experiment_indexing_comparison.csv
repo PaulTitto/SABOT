@@ -1,4 +1,0 @@
-timestamp,llm,strategy,file,file_size_chars,llm_p_tokens,llm_c_tokens,llm_cost,latency,call_count,entities_extracted,relations_extracted
-2026-05-01T16:29:40.983168,gemini,SEPARATE,d1,2057,9210,2629,0.0019726,13.801,2,20,12
-2026-05-01T16:29:40.991224,deepseek,SEPARATE,d1,2057,0,0,0.0,0.001,0,0,0
-2026-05-01T16:29:40.999170,gpt,SEPARATE,d1,2057,0,0,0.0,0.001,0,0,0
