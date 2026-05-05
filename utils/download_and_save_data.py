@@ -14,6 +14,15 @@ NAMA_HARI = {
 
 
 def download_and_save_data(y: int, q: int, w: int, tema_triwulan: str):
+    """
+    Download lesson data from GitHub and save as formatted text files.
+
+    Args:
+        y (int): Year (e.g., 2024)
+        q (int): Quarter (1-4)
+        w (int): Week number (1-13)
+        tema_triwulan (str): Quarterly theme
+    """
     tema_mingguan = ""  # Initialize
     HARI = range(1, 8)
 
@@ -39,15 +48,10 @@ def download_and_save_data(y: int, q: int, w: int, tema_triwulan: str):
             indo_date, iso_date = date_format(tanggal_mentah) if tanggal_mentah else ("", "")
             hari_indo = NAMA_HARI[d]
 
+            # Extract verse information
             ayat_isi = meta.get('ayat_hafalan', '')
             ayat_ref = ""
-            ayat_section = ""
-            if ayat_ref.strip() or ayat_isi.strip():
-                ayat_section = f"""
-            [AYAT]
-            hafalan: {ayat_ref}
-            isi_ayat: {ayat_isi}
-            """
+
             if ayat_isi:
                 ref_match = re.search(r'[\(（]([^\)）]+)[\)）]', ayat_isi)
                 if ref_match:
@@ -56,9 +60,17 @@ def download_and_save_data(y: int, q: int, w: int, tema_triwulan: str):
             else:
                 ayat_isi, ayat_ref = memorized_verses(clean_text)
 
+            # Build verse section only if we have data
+            ayat_section = ""
+            if ayat_ref.strip() or ayat_isi.strip():
+                ayat_section = f"""
+[AYAT]
+hafalan: {ayat_ref}
+isi_ayat: {ayat_isi}
+"""
+
             doc_id = f"{y}-q{q}-w{w:02d}-d{d}"
-            dataset = f"""
-[DOC]
+            dataset = f"""[DOC]
 id: {doc_id}
 tanggal: {hari_indo}, {indo_date}
 tanggal_iso: {iso_date}
@@ -70,12 +82,11 @@ judul: {judul}
 judul_harian: {judul.lower()}
 tema_mingguan: {tema_mingguan}
 tema_triwulan: {tema_triwulan}
-{ayat_section}
-[ISI]
+{ayat_section}[ISI]
 {clean_text}
 """
-            # Create directories and save
 
+            # Create directories and save
             output_dir = f"./data/{y}"
             folder_quartal = os.path.join(output_dir, f"{q:02d}")
             os.makedirs(folder_quartal, exist_ok=True)
@@ -92,3 +103,12 @@ tema_triwulan: {tema_triwulan}
             print(f"Error: {url} - {str(e)[:80]}")
             continue
 
+
+if __name__ == "__main__":
+    # Example usage
+    year = 2024
+    quarter = 1
+    week = 1
+    quarterly_theme = "Tema Triwulan"
+
+    download_and_save_data(year, quarter, week, quarterly_theme)

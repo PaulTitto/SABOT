@@ -32,6 +32,11 @@ from server import rag
 SCHOOL_FILES = [
     "./data/2026/02/01/01.txt",
     "./data/2026/02/01/02.txt",
+    "./data/2026/02/01/03.txt",
+    "./data/2026/02/01/04.txt",
+    "./data/2026/02/01/05.txt",
+    "./data/2026/02/01/06.txt",
+    "./data/2026/02/01/07.txt",
 ]
 LLM_CONFIGS = {
     # "gemini-2.5-flash-lite": {
@@ -42,27 +47,27 @@ LLM_CONFIGS = {
     #     "output_cost_per_million": 0.40,
     #     "cost_func": get_gemini_detailed_costs,
     # },
-    "deepseek-v4-flash": {
-        "name": "DeepSeek V4 Flash",
-        "developer": "DeepSeek AI",
-        "context_window": 1000000,
-        "input_cost_per_million": 0.14,
-        "output_cost_per_million": 0.28,
-        "cost_func": get_deepseek_detailed_costs,
-    },
-    # "gpt-4.1-mini": {
-    #     "name": "GPT-4.1 Mini",
-    #     "developer": "OpenAI",
-    #     "context_window": 1047576,
-    #     "input_cost_per_million": 0.40,
-    #     "output_cost_per_million": 1.60,
-    #     "cost_func": get_openai_detailed_costs,
+    # "deepseek-v4-flash": {
+    #     "name": "DeepSeek V4 Flash",
+    #     "developer": "DeepSeek AI",
+    #     "context_window": 1000000,
+    #     "input_cost_per_million": 0.14,
+    #     "output_cost_per_million": 0.28,
+    #     "cost_func": get_deepseek_detailed_costs,
     # },
+    "gpt-4.1-mini": {
+        "name": "GPT-4.1 Mini",
+        "developer": "OpenAI",
+        "context_window": 1047576,
+        "input_cost_per_million": 0.40,
+        "output_cost_per_million": 1.60,
+        "cost_func": get_openai_detailed_costs,
+    },
 }
 
 
 WORKING_DIRS = {
-    # ("separate", "gemini-2.5-flash-lite"): "../exp_separate_gemini",
+    ("separate", "gemini-2.5-flash-lite"): "../exp_separate_gemini",
     ("separate", "deepseek-v4-flash"):      "../exp_separate_deepseek",
     ("separate", "gpt-4.1-mini"):           "../exp_separate_gpt4",
     ("merge",    "gemini-2.5-flash-lite"):  "../exp_merge_gemini",
@@ -73,7 +78,7 @@ WORKING_DIRS = {
     ("batch",    "gpt-4.1-mini"):           "../exp_batch_gpt4",
 }
 
-EXPERIMENT_CSV = "experiment_indexing_9combinations.csv"
+EXPERIMENT_CSV = "full_experiment_indexing_9_combinations.csv"
 
 CSV_FIELDNAMES = [
     "timestamp",
