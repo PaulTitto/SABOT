@@ -20,7 +20,8 @@ async def run_gemini():
     print("Starting System Gemini...")
 
     rag = await init_gemini_lightRAG()
-    storage_check_path = os.path.join(WORKING_DIR, "kv_store_full_text.json")
+    storage_check_path = os.path.join("../exp_merge_gemini_second", "kv_store_full_text.json")
+    # storage_check_path = os.path.join(WORKING_DIR, "kv_store_full_text.json")
 
     if not os.path.exists(storage_check_path):
         print("--- DATABASE KOSONG: Memulai proses indexing dokumen... ---")
@@ -64,7 +65,7 @@ async def run_gemini():
         print("--- DATABASE DITEMUKAN: Menggunakan data lama (Hemat Biaya) ---")
 
     # question = "Apa judul pelajaran minggu kesatu?"
-    question = "Ayat  Judul pelajaran di triwulan ini apa"
+    question = "Judul Pelajaran Apa saja yang ada diminggu ke 1 sebutkan tuju"
     print(f"\nAsking: {question}")
 
     await answer_question(MODEL, rag, question, llm_tracker, embed_tracker)

@@ -39,14 +39,14 @@ SCHOOL_FILES = [
     "./data/2026/02/01/07.txt",
 ]
 LLM_CONFIGS = {
-    # "gemini-2.5-flash-lite": {
-    #     "name": "Gemini 2.5 Flash-Lite",
-    #     "developer": "Google",
-    #     "context_window": 1048576,
-    #     "input_cost_per_million": 0.10,
-    #     "output_cost_per_million": 0.40,
-    #     "cost_func": get_gemini_detailed_costs,
-    # },
+    "gemini-2.5-flash-lite": {
+        "name": "Gemini 2.5 Flash-Lite",
+        "developer": "Google",
+        "context_window": 1048576,
+        "input_cost_per_million": 0.10,
+        "output_cost_per_million": 0.40,
+        "cost_func": get_gemini_detailed_costs,
+    },
     # "deepseek-v4-flash": {
     #     "name": "DeepSeek V4 Flash",
     #     "developer": "DeepSeek AI",
@@ -55,27 +55,27 @@ LLM_CONFIGS = {
     #     "output_cost_per_million": 0.28,
     #     "cost_func": get_deepseek_detailed_costs,
     # },
-    "gpt-4.1-mini": {
-        "name": "GPT-4.1 Mini",
-        "developer": "OpenAI",
-        "context_window": 1047576,
-        "input_cost_per_million": 0.40,
-        "output_cost_per_million": 1.60,
-        "cost_func": get_openai_detailed_costs,
-    },
+    # "gpt-4.1-mini": {
+    #     "name": "GPT-4.1 Mini",
+    #     "developer": "OpenAI",
+    #     "context_window": 1047576,
+    #     "input_cost_per_million": 0.40,
+    #     "output_cost_per_million": 1.60,
+    #     "cost_func": get_openai_detailed_costs,
+    # },
 }
 
 
 WORKING_DIRS = {
-    ("separate", "gemini-2.5-flash-lite"): "../exp_separate_gemini",
-    ("separate", "deepseek-v4-flash"):      "../exp_separate_deepseek",
-    ("separate", "gpt-4.1-mini"):           "../exp_separate_gpt4",
-    ("merge",    "gemini-2.5-flash-lite"):  "../exp_merge_gemini",
-    ("merge",    "deepseek-v4-flash"):      "../exp_merge_deepseek",
-    ("merge",    "gpt-4.1-mini"):           "../exp_merge_gpt4",
-    ("batch",    "gemini-2.5-flash-lite"):  "../exp_batch_gemini",
-    ("batch",    "deepseek-v4-flash"):      "../exp_batch_deepseek",
-    ("batch",    "gpt-4.1-mini"):           "../exp_batch_gpt4",
+    ("separate", "gemini-2.5-flash-lite"): "../exp_separate_gemini_third",
+    # ("separate", "deepseek-v4-flash"):      "../exp_separate_deepseek_second",
+    # ("separate", "gpt-4.1-mini"):           "../exp_separate_gpt4_second",
+    ("merge",    "gemini-2.5-flash-lite"):  "../exp_merge_gemini_third",
+    # ("merge",    "deepseek-v4-flash"):      "../exp_merge_deepseek_second",
+    # ("merge",    "gpt-4.1-mini"):           "../exp_merge_gpt4_second",
+    ("batch",    "gemini-2.5-flash-lite"):  "../exp_batch_gemini_third",
+    # ("batch",    "deepseek-v4-flash"):      "../exp_batch_deepseek_second",
+    # ("batch",    "gpt-4.1-mini"):           "../exp_batch_gpt4_second",
 }
 
 EXPERIMENT_CSV = "full_experiment_indexing_9_combinations.csv"
@@ -519,6 +519,6 @@ if __name__ == "__main__":
     validate_env()
     configure_logging()
     for model_key in LLM_CONFIGS:
-        # asyncio.run(experiment_separate(model_key))
+        asyncio.run(experiment_separate(model_key))
         # asyncio.run(experiment_merge(model_key))
-        asyncio.run(experiment_batch(model_key))
+        # asyncio.run(experiment_batch(model_key))

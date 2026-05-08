@@ -1,0 +1,174 @@
+user_input,retrieved_contexts,response,reference,accuracy,relevance,completeness,strategy,latency,timestamp
+Apa judul pelajaran untuk hari Sabtu?,Nodes retrieved from LightRAG,"Judul pelajaran untuk hari Sabtu, 4 April 2026, adalah ""Cek Realitas"". [1]",Judul pelajaran untuk hari Sabtu (Hari ke-1) adalah 'Cek Realitas'.,1,1,0,hybrid,11.974212646484375,2026-05-08 12:30:49
+Apa judul pelajaran untuk hari Sabtu?,Nodes retrieved from LightRAG,"Judul pelajaran untuk hari Sabtu adalah ""Cek Realitas"" [1]. Pelajaran ini berkaitan dengan tema mingguan ""cek realitas"" dan tema triwulanan ""Bertumbuh Dalam Hubungan Dengan Tuhan"" [1].",Judul pelajaran untuk hari Sabtu (Hari ke-1) adalah 'Cek Realitas'.,0,1,0,local,21.976276636123657,2026-05-08 12:31:14
+Apa judul pelajaran untuk hari Sabtu?,Nodes retrieved from LightRAG,"Judul pelajaran untuk hari Sabtu adalah ""Cek Realitas"". [1]",Judul pelajaran untuk hari Sabtu (Hari ke-1) adalah 'Cek Realitas'.,1,1,1,global,7.627174377441406,2026-05-08 12:31:24
+Apa judul pelajaran untuk hari Sabtu?,Nodes retrieved from LightRAG,"Judul pelajaran untuk hari Sabtu, 28 Maret 2026 adalah ""Cek Realitas"". Tema mingguan dan triwulannya adalah ""cek realitas"" dan ""Bertumbuh Dalam Hubungan Dengan Tuhan"" secara berturut-turut. [1]",Judul pelajaran untuk hari Sabtu (Hari ke-1) adalah 'Cek Realitas'.,0,1,1,naive,11.423231601715088,2026-05-08 12:31:39
+Apa judul pelajaran untuk hari Sabtu?,Nodes retrieved from LightRAG,"Judul pelajaran untuk hari Sabtu adalah ""Cek Realitas"". [1]",Judul pelajaran untuk hari Sabtu (Hari ke-1) adalah 'Cek Realitas'.,1,1,1,mix,8.321706056594849,2026-05-08 12:31:50
+Mengapa 'Cek Realitas' (materi Sabtu) menjadi langkah awal yang penting sebelum kita membahas 'Kondisi Kita' (materi Minggu)?,Nodes retrieved from LightRAG,"""Cek Realitas,"" yang merupakan tema mingguan dan materi pelajaran pada hari Sabtu, dianggap sebagai langkah awal yang penting sebelum membahas ""Kondisi Kita"" pada hari Minggu karena ""Cek Realitas"" mendorong refleksi jujur terhadap kondisi hubungan seseorang dengan Allah. Ini melibatkan evaluasi mendalam terhadap keadaan spiritual saat ini, yang merupakan landasan untuk memahami ""Kondisi Kita"" sebagaimana digambarkan oleh Yesus dalam kitab Wahyu.
+
+Dengan melakukan ""Cek Realitas,"" seseorang dapat lebih siap untuk menerima dan memahami gambaran Yesus tentang kondisi rohani umat-Nya di akhir zaman, sebagaimana tercatat dalam Wahyu 3:14-22. Ini memungkinkan individu untuk mengenali apakah mereka berada dalam kondisi yang apatis atau ""suam-suam kuku,"" seperti yang dijelaskan dalam materi hari Minggu, dan untuk lebih terbuka terhadap solusi yang ditawarkan Yesus untuk memperbaiki hubungan mereka dengan Allah.
+
+### References
+
+* [1] Cek Realitas
+* [2] Kondisi Kita",Karena kita tidak bisa bergerak ke tempat yang lebih baik sebelum melakukan kejujuran terhadap diri sendiri mengenai kondisi hubungan kita saat ini dan mendengarkan solusi yang Yesus tawarkan.,1,1,1,hybrid,10.022719144821167,2026-05-08 12:32:03
+Mengapa 'Cek Realitas' (materi Sabtu) menjadi langkah awal yang penting sebelum kita membahas 'Kondisi Kita' (materi Minggu)?,Nodes retrieved from LightRAG,"'Cek Realitas' adalah tema mingguan yang penting karena mendorong refleksi jujur tentang kondisi hubungan seseorang dengan Allah. Sebelum membahas 'Kondisi Kita' pada hari Minggu, yang merinci bagaimana Yesus menggambarkan kondisi rohani umat-Nya, penting untuk melakukan 'cek realitas' terlebih dahulu. Hal ini memungkinkan seseorang untuk secara sadar mengevaluasi keadaan hubungan spiritual mereka saat ini dan mencari solusi yang ditawarkan Yesus. [2] [1]",Karena kita tidak bisa bergerak ke tempat yang lebih baik sebelum melakukan kejujuran terhadap diri sendiri mengenai kondisi hubungan kita saat ini dan mendengarkan solusi yang Yesus tawarkan.,1,1,1,local,11.321431636810303,2026-05-08 12:32:18
+Mengapa 'Cek Realitas' (materi Sabtu) menjadi langkah awal yang penting sebelum kita membahas 'Kondisi Kita' (materi Minggu)?,Nodes retrieved from LightRAG,"""Cek Realitas"" merupakan langkah awal yang penting karena mendorong refleksi jujur tentang keadaan hubungan seseorang dengan Tuhan sebelum membahas lebih lanjut ""Kondisi Kita"". Hal ini memungkinkan individu untuk mengidentifikasi area di mana hubungan mereka mungkin melemah dan untuk memahami solusi yang ditawarkan Yesus untuk memperbaiki kondisi spiritual mereka [DOC].",Karena kita tidak bisa bergerak ke tempat yang lebih baik sebelum melakukan kejujuran terhadap diri sendiri mengenai kondisi hubungan kita saat ini dan mendengarkan solusi yang Yesus tawarkan.,1,1,1,global,8.757742166519165,2026-05-08 12:32:29
+Mengapa 'Cek Realitas' (materi Sabtu) menjadi langkah awal yang penting sebelum kita membahas 'Kondisi Kita' (materi Minggu)?,Nodes retrieved from LightRAG,"""Cek Realitas"" menjadi langkah awal yang penting sebelum membahas ""Kondisi Kita"" karena ini adalah momen untuk merenungkan kondisi hubungan kita dengan Allah saat ini. Dengan melakukan ""cek realitas"" yang jujur terhadap diri sendiri, kita dapat mengidentifikasi apakah hubungan tersebut hidup dan kuat, atau sebaliknya, telah melemah seiring waktu, bahkan mungkin menjadi ""suam-suam kuku"" seperti yang digambarkan dalam Alkitab. Ini memungkinkan kita untuk menyadari solusi yang ditawarkan Yesus sebelum melangkah lebih jauh dalam diskusi mengenai kondisi umat-Nya di akhir zaman. [DOC id: 2026-q2-w01-d1]",Karena kita tidak bisa bergerak ke tempat yang lebih baik sebelum melakukan kejujuran terhadap diri sendiri mengenai kondisi hubungan kita saat ini dan mendengarkan solusi yang Yesus tawarkan.,1,1,1,naive,8.919269323348999,2026-05-08 12:32:41
+Mengapa 'Cek Realitas' (materi Sabtu) menjadi langkah awal yang penting sebelum kita membahas 'Kondisi Kita' (materi Minggu)?,Nodes retrieved from LightRAG,"'Cek Realitas' menjadi langkah awal yang penting sebelum membahas 'Kondisi Kita' karena 'Cek Realitas' adalah tema mingguan yang mendorong refleksi mendalam tentang keadaan hubungan seseorang dengan Allah saat ini. Proses ini melibatkan penilaian jujur terhadap diri sendiri dan kesiapan untuk mendengarkan solusi yang ditawarkan Yesus untuk meningkatkan kualitas hubungan tersebut. Setelah melakukan 'Cek Realitas' ini, barulah kita dapat secara efektif mengevaluasi 'Kondisi Kita', yaitu bagaimana hubungan kita dengan Allah saat ini digambarkan oleh Yesus, seperti yang diuraikan dalam Wahyu 3:14-22.
+
+[1] 2026-q2-w01-d1
+[2] 2026-q2-w01-d2",Karena kita tidak bisa bergerak ke tempat yang lebih baik sebelum melakukan kejujuran terhadap diri sendiri mengenai kondisi hubungan kita saat ini dan mendengarkan solusi yang Yesus tawarkan.,1,1,1,mix,10.215293169021606,2026-05-08 12:32:54
+"Dalam materi hari Minggu, Yesus memperkenalkan diri sebagai 'Saksi yang Setia dan Benar'. Apa hubungannya dengan diagnosis-Nya terhadap jemaat Laodikia?",Nodes retrieved from LightRAG,"Dalam materi pelajaran hari Minggu, Yesus memperkenalkan diri-Nya sebagai ""Saksi yang setia dan benar,"" yang merupakan permulaan dari ciptaan Allah (Wahyu 3:14). Sebagai saksi yang setia dan benar, Yesus berbicara dengan jelas dan jujur.
+
+Hubungannya dengan diagnosis-Nya terhadap jemaat Laodikia terlihat dari bagaimana Dia menggambarkan kondisi rohani mereka. Yesus menyatakan bahwa Dia mengenal umat Kristen di akhir zaman, termasuk jemaat Laodikia, yang digambarkan sebagai ""tidak panas dan tidak dingin"" (Wahyu 3:15). Mereka merasa cukup dan tidak membutuhkan apa pun, padahal sebenarnya mereka sangat membutuhkan Yesus. Yesus mengancam akan ""memuntahkan"" mereka karena kondisi suam-suam kuku mereka, yang lebih buruk daripada tidak percaya sama sekali (Wahyu 3:16). Namun, Yesus belum melakukan itu dan menawarkan pertukaran, yaitu keapatisan mereka ditukar dengan emas-Nya (kekayaan rohani), pakaian putih-Nya (jubah kebenaran-Nya), dan salep mata-Nya (untuk membuka mata rohani mereka) (Wahyu 3:18-19) [DOC id: 2026-q2-w01-d2].","Sebagai Saksi yang Setia, Yesus tidak berbohong; Ia berbicara jujur bahwa kita sering merasa kaya dan tidak butuh apa-apa, padahal sebenarnya kita melarat, buta, dan telanjang.",1,1,1,hybrid,15.480213165283203,2026-05-08 12:33:13
+"Dalam materi hari Minggu, Yesus memperkenalkan diri sebagai 'Saksi yang Setia dan Benar'. Apa hubungannya dengan diagnosis-Nya terhadap jemaat Laodikia?",Nodes retrieved from LightRAG,"Yesus memperkenalkan diri-Nya sebagai Saksi yang setia dan benar, permulaan dari ciptaan Allah (Wahyu 3:14). Seorang saksi yang setia dan benar tidak berbohong, melainkan berbicara dengan jelas dan jujur. Dalam Wahyu 3:14-17, Yesus menggambarkan kondisi rohani umat-Nya pada zaman akhir ini. Dia menyatakan bahwa Dia mengenal mereka, yang hidup tidak panas dan tidak dingin, merasa tidak membutuhkan apa pun karena mereka meluangkan sedikit waktu dengan Allah, dan menganggap itu sudah cukup. Namun, Yesus menyatakan bahwa kondisi mereka yang suam-suam kuku lebih buruk daripada Neraka, dan Dia akan memuntahkan mereka dari mulut-Nya. Meski begitu, Dia mengajak mereka untuk membuat keputusan berani sekarang [1].
+
+### References
+
+* [1] Kondisi Kita","Sebagai Saksi yang Setia, Yesus tidak berbohong; Ia berbicara jujur bahwa kita sering merasa kaya dan tidak butuh apa-apa, padahal sebenarnya kita melarat, buta, dan telanjang.",0,1,0,local,18.73147225379944,2026-05-08 12:33:35
+"Dalam materi hari Minggu, Yesus memperkenalkan diri sebagai 'Saksi yang Setia dan Benar'. Apa hubungannya dengan diagnosis-Nya terhadap jemaat Laodikia?",Nodes retrieved from LightRAG,,"Sebagai Saksi yang Setia, Yesus tidak berbohong; Ia berbicara jujur bahwa kita sering merasa kaya dan tidak butuh apa-apa, padahal sebenarnya kita melarat, buta, dan telanjang.",0,0,0,global,14.395943880081177,2026-05-08 12:33:52
+"Dalam materi hari Minggu, Yesus memperkenalkan diri sebagai 'Saksi yang Setia dan Benar'. Apa hubungannya dengan diagnosis-Nya terhadap jemaat Laodikia?",Nodes retrieved from LightRAG,"[assistant] Yesus memperkenalkan diri sebagai 'Saksi yang Setia dan Benar' (Wahyu 3:14) sebagai dasar dari diagnosis-Nya terhadap jemaat Laodikia. Sebagai saksi yang setia dan benar, perkataan-Nya mencerminkan kebenaran tanpa kebohongan. Dengan demikian, deskripsi-Nya mengenai kondisi rohani jemaat—bahwa mereka tidak ""panas"" dan tidak ""dingin,"" merasa tidak membutuhkan apa pun padahal sangat membutuhkan-Nya, dan bersikap suam-suam kuku—harus diterima sebagai kebenaran yang jujur dan akurat, meskipun mungkin menyakitkan [DOC ID: 2026-q2-w01-d2]. Ketiadaan ""panas"" atau ""dingin"" ini, yang diibaratkan dengan sikap suam-suam kuku, sangat buruk sehingga Yesus menyatakan akan memuntahkan mereka dari mulut-Nya [DOC ID: 2026-q2-w01-d2].","Sebagai Saksi yang Setia, Yesus tidak berbohong; Ia berbicara jujur bahwa kita sering merasa kaya dan tidak butuh apa-apa, padahal sebenarnya kita melarat, buta, dan telanjang.",1,1,1,naive,13.836530685424805,2026-05-08 12:34:09
+"Dalam materi hari Minggu, Yesus memperkenalkan diri sebagai 'Saksi yang Setia dan Benar'. Apa hubungannya dengan diagnosis-Nya terhadap jemaat Laodikia?",Nodes retrieved from LightRAG,"Yesus memperkenalkan diri sebagai Saksi yang setia dan benar, yang merupakan permulaan dari ciptaan Allah, seperti yang tercatat dalam Wahyu 3:14. Pernyataan ini menjadi dasar bagi-Nya untuk menggambarkan kondisi rohani umat-Nya pada zaman akhir. Dalam Wahyu 3:14-17, Yesus menyoroti keadaan jemaat Laodikia yang merasa kaya dan tidak kekurangan apa pun, padahal sebenarnya mereka miskin, buta, dan telanjang secara rohani. Sebagai saksi yang setia dan benar, Yesus berbicara jujur mengenai kondisi spiritual umat-Nya, yang ditandai dengan sikap suam-suam kuku—tidak panas dan tidak dingin—yang lebih buruk daripada kondisi panas atau dingin. Hal ini menunjukkan bahwa Yesus peduli terhadap kondisi rohani mereka dan menginginkan hubungan yang lebih dalam daripada sekadar kepuasan diri atau kepatuhan lahiriah semata. [1]","Sebagai Saksi yang Setia, Yesus tidak berbohong; Ia berbicara jujur bahwa kita sering merasa kaya dan tidak butuh apa-apa, padahal sebenarnya kita melarat, buta, dan telanjang.",1,1,1,mix,13.446472644805908,2026-05-08 12:34:25
+"Jika seorang anggota kelas bertanya, 'Mengapa Tuhan menegur kita dengan begitu keras di Wahyu 3:19?', bagaimana jawaban Anda berdasarkan materi hari Senin?",Nodes retrieved from LightRAG,"[user] Jika seorang anggota kelas bertanya, 'Mengapa Tuhan menegur kita dengan begitu keras di Wahyu 3:19?', bagaimana jawaban Anda berdasarkan materi hari Senin?
+[assistant] Berdasarkan materi hari Senin, Yesus menegur kita dalam Wahyu 3:19 karena kasih-Nya yang mendalam kepada kita. Dia menginginkan hubungan yang lebih kuat dan lebih dalam dengan kita, dan Dia tidak puas dengan sikap setengah-setengah atau pendekatan yang hanya berhubungan saat kita membutuhkan. Teguran ini demi kebaikan kita sendiri, mendorong kita untuk bertobat dengan menyadari bahwa kita mungkin berpikir kita kaya secara rohani, padahal sebenarnya kita miskin, malang, buta, dan telanjang (Wahyu 3:17).
+
+Yesus menawarkan pertukaran yang murah hati: keapatisan kita ditukar dengan emas-Nya, pakaian kebenaran-Nya, dan salep mata-Nya. Tujuannya adalah untuk menjadikan kita kaya di mata-Nya, menutupi kita dengan kebenaran-Nya, dan membuka mata kita untuk melihat bahwa hubungan yang tinggal tetap dengan-Nya akan mengubah segalanya. Dia menawarkan ini karena Dia tahu kita tidak dapat menyediakannya sendiri. Yesus berdiri dengan sabar, mengetuk pintu hati kita, menunggu kita untuk membuka dan menerima-Nya ke dalam hidup kita.
+
+### References
+
+- [1] 2026-q2-w01-d3","Tuhan menegur justru karena kasih-Nya yang sangat dalam; Ia tidak puas dengan hubungan yang setengah-setengah atau sekadar 'datang kalau butuh saja', melainkan menginginkan hubungan yang jauh lebih kuat.",1,1,1,hybrid,19.647067308425903,2026-05-08 12:34:48
+"Jika seorang anggota kelas bertanya, 'Mengapa Tuhan menegur kita dengan begitu keras di Wahyu 3:19?', bagaimana jawaban Anda berdasarkan materi hari Senin?",Nodes retrieved from LightRAG,"[assistant] Berdasarkan materi pelajaran hari Senin, Yesus menegur kita karena kasih-Nya yang mendalam kepada kita. Dia menginginkan hubungan yang jauh lebih kuat dan lebih dalam daripada sekadar setengah-setengah atau hanya mendekat ketika kita membutuhkan-Nya. Sebagaimana dinyatakan dalam Wahyu 3:19, ""Barangsiapa Kukasihi, ia Kutegor dan Kuhajar."" Yesus menegur kita demi kebaikan kita sendiri, mendorong kita untuk bertobat. Dia mengingatkan kita bahwa kita mungkin berpikir kita kaya, tetapi sebenarnya kita melarat, malang, miskin, buta, dan telanjang (Wahyu 3:17).
+
+Yesus mengundang kita untuk memiliki hubungan yang saling terbuka dan hangat dengan-Nya, bahkan sampai pada gambaran duduk bersama-Nya untuk makan (Wahyu 3:20). Dia berdiri sabar di pintu hati kita, menunggu kita untuk membukanya, tidak memaksa masuk. Menyadari hal ini, kita diundang untuk merenungkan makna Salib dan bagaimana hal itu dapat menginspirasi kita untuk membuka hati bagi-Nya. [1]","Tuhan menegur justru karena kasih-Nya yang sangat dalam; Ia tidak puas dengan hubungan yang setengah-setengah atau sekadar 'datang kalau butuh saja', melainkan menginginkan hubungan yang jauh lebih kuat.",1,1,1,local,17.262293100357056,2026-05-08 12:35:08
+"Jika seorang anggota kelas bertanya, 'Mengapa Tuhan menegur kita dengan begitu keras di Wahyu 3:19?', bagaimana jawaban Anda berdasarkan materi hari Senin?",Nodes retrieved from LightRAG,"Menanggapi pertanyaan mengenai teguran keras Tuhan di Wahyu 3:19, berdasarkan materi hari Senin, jawaban Yesus kepada umat-Nya adalah karena kasih-Nya yang mendalam. [2] Dia menegur untuk kebaikan kita sendiri, karena Dia menginginkan hubungan yang jauh lebih kuat dan lebih dalam dengan kita. [2] Yesus tidak puas dengan sikap setengah-setengah atau pendekatan ""Saya akan datang kepada-Nya hanya jika saya membutuhkannya."" [2]
+
+Sebaliknya, teguran tersebut bertujuan agar kita menyadari apa yang salah, yaitu kita merasa kaya padahal sebenarnya kita miskin, malang, buta, dan telanjang. [2] Yesus ingin hubungan yang saling terbuka dan pembicaraan yang hangat, mengundang kita untuk memiliki hubungan yang dekat dan tinggal tetap dalam kasih-Nya. [1] Dia mengetuk pintu hati kita dengan sabar, menunggu kita untuk membuka-Nya, karena Dia tidak memaksa masuk. [1] Metafora ini menggambarkan jenis hubungan yang Yesus inginkan, dan penyesalan tidak akan pernah muncul karena waktu yang dihabiskan bersama-Nya. [1]","Tuhan menegur justru karena kasih-Nya yang sangat dalam; Ia tidak puas dengan hubungan yang setengah-setengah atau sekadar 'datang kalau butuh saja', melainkan menginginkan hubungan yang jauh lebih kuat.",0,1,1,global,13.158478260040283,2026-05-08 12:35:25
+"Jika seorang anggota kelas bertanya, 'Mengapa Tuhan menegur kita dengan begitu keras di Wahyu 3:19?', bagaimana jawaban Anda berdasarkan materi hari Senin?",Nodes retrieved from LightRAG,"Yesus menegur kita karena kasih-Nya yang mendalam dan keinginan-Nya untuk memiliki hubungan yang lebih kuat dan lebih dalam dengan kita. Dia tidak puas dengan sikap kita yang setengah-setengah atau pendekatan ""Aku akan datang kepada-Nya kalau aku butuh saja."" Teguran-Nya demi kebaikan kita sendiri, mengajak kita untuk bertobat dengan menyadari bahwa kita mungkin merasa kaya namun sebenarnya melarat, malang, miskin, buta, dan telanjang (Wahyu 3:17) [2].
+
+Meskipun Dia menegur, Yesus juga menawarkan janji yang luar biasa: Dia ingin duduk bersama Anda dan saya untuk makan bersama, menggambarkan hubungan yang dekat, terbuka, dan hangat. Dia berdiri dengan sabar, mengetuk pintu hati, dan menunggu kita untuk membukanya. Ini adalah gambaran hubungan yang intim dan kekal yang Dia undang kita untuk miliki dengan-Nya [1].","Tuhan menegur justru karena kasih-Nya yang sangat dalam; Ia tidak puas dengan hubungan yang setengah-setengah atau sekadar 'datang kalau butuh saja', melainkan menginginkan hubungan yang jauh lebih kuat.",1,1,1,naive,14.489143133163452,2026-05-08 12:35:42
+"Jika seorang anggota kelas bertanya, 'Mengapa Tuhan menegur kita dengan begitu keras di Wahyu 3:19?', bagaimana jawaban Anda berdasarkan materi hari Senin?",Nodes retrieved from LightRAG,"Berdasarkan materi pelajaran hari Senin, jawaban atas pertanyaan mengenai mengapa Tuhan menegur umat-Nya dengan keras di Wahyu 3:19 adalah karena kasih-Nya yang dalam. Yesus menegur kita demi kebaikan kita sendiri, karena Ia menginginkan hubungan yang jauh lebih kuat dan lebih dalam dengan kita. Ia tidak puas dengan sikap setengah-setengah atau pendekatan ""Saya akan datang kepada-Nya hanya jika saya membutuhkan-Nya.""
+
+Yesus ingin kita bertobat, namun pertobatan hanya dapat terjadi jika kita menyadari ada sesuatu yang salah. Beliau telah menyatakan bahwa masalahnya adalah kita merasa kaya padahal sebenarnya kita melarat, malang, miskin, buta, dan telanjang, seperti yang dijelaskan dalam Wahyu 3:17. Melalui Wahyu 3:20, Yesus menawarkan janji untuk duduk bersama kita dan memiliki hubungan yang terbuka dan hangat, namun kita harus membuka hati kita terlebih dahulu. Ia menunggu dengan sabar dan mengetuk pintu hati kita, tidak pernah memaksa masuk. Jika kita mendengar-Nya, kita diundang untuk membukakan pintu agar Ia dapat masuk ke dalam hidup kita.
+
+Ketika kita kelak berhadapan dengan Yesus, mengenang kembali penderitaan di bumi ini akan terasa kecil dibandingkan kemuliaan-Nya. Oleh karena itu, penting untuk menanggapi panggilan-Nya saat ini dengan membuat keputusan sadar untuk membuka hati bagi-Nya.
+
+### References
+
+* [1] Teguran, Pertobatan, dan Upah","Tuhan menegur justru karena kasih-Nya yang sangat dalam; Ia tidak puas dengan hubungan yang setengah-setengah atau sekadar 'datang kalau butuh saja', melainkan menginginkan hubungan yang jauh lebih kuat.",1,1,1,mix,12.061425685882568,2026-05-08 12:35:57
+Apa janji indah yang terdapat dalam Wahyu 3:20 terkait hubungan pribadi dengan Yesus?,Nodes retrieved from LightRAG,"Dalam Wahyu 3:20, Yesus memberikan janji bahwa Dia akan masuk dan makan bersama dengan siapa saja yang membuka pintu hati mereka kepada-Nya. Janji ini menggambarkan hubungan yang intim dan terbuka yang diinginkan Yesus dengan setiap individu, di mana Dia bersedia untuk berbagi makanan dan percakapan yang hangat. Dia menunggu dengan sabar di pintu hati, mengetuk, dan berharap agar individu tersebut membuka diri-Nya untuk masuk ke dalam hidup mereka. [2026-q2-w01-d3]","Yesus berjanji bahwa jika kita mendengar suara-Nya dan membuka pintu, Ia akan masuk dan makan bersama-sama dengan kita, menggambarkan hubungan yang intim dan hangat.",1,1,1,hybrid,9.273170232772827,2026-05-08 12:36:09
+Apa janji indah yang terdapat dalam Wahyu 3:20 terkait hubungan pribadi dengan Yesus?,Nodes retrieved from LightRAG,"Dalam Wahyu 3:20, Yesus menjanjikan bahwa Dia akan duduk bersama Anda dan saya untuk makan bersama, yang melambangkan hubungan yang saling terbuka, pembicaraan yang hangat, dan kedekatan. Janji ini menggambarkan hubungan yang mendalam dan kekal yang diinginkan Yesus dengan setiap individu [1].
+
+Yesus digambarkan berdiri sabar di depan pintu hati Anda, mengetuk dengan lembut. Dia tidak memaksa masuk, tetapi menunggu Anda untuk membuka pintu. Jika Anda mendengar-Nya dan membuka hati, Dia akan segera masuk ke dalam hidup Anda [1]. Metafora ini menunjukkan jenis hubungan yang intim dan pribadi yang Yesus inginkan [1].
+
+Tindakan membuka hati kepada Yesus, bahkan hanya dengan merenungkan makna Salib, dapat menginspirasi keputusan untuk menerima tawaran-Nya untuk hubungan yang lebih dalam ini [1].","Yesus berjanji bahwa jika kita mendengar suara-Nya dan membuka pintu, Ia akan masuk dan makan bersama-sama dengan kita, menggambarkan hubungan yang intim dan hangat.",1,1,1,local,18.986446380615234,2026-05-08 12:36:31
+Apa janji indah yang terdapat dalam Wahyu 3:20 terkait hubungan pribadi dengan Yesus?,Nodes retrieved from LightRAG,"Dalam Wahyu 3:20, Yesus memberikan janji kepada mereka yang membuka pintu hati mereka untuk-Nya. Janji tersebut menggambarkan bahwa Allah semesta alam ingin duduk dan makan bersama Anda, menikmati pembicaraan yang hangat dan hubungan yang erat. Yesus berdiri dengan sabar di pintu hati Anda, menunggu untuk diundang masuk, dan Dia akan segera memasuki hidup Anda [DOC].
+
+[DOC]
+id: 2026-q2-w01-d3
+tanggal: Selasa, 31 Maret 2026
+tanggal_iso: 2026-03-31
+minggu: 01
+triwulan: 2
+judul: Kasih yang Tak Berkesudahan
+
+[PELAJARAN]
+judul_harian: kasih yang tak berkesudahan
+tema_mingguan: cek realitas
+tema_triwulan: Bertumbuh Dalam Hubungan Dengan Tuhan
+[ISI]
+Setelah menggambarkan kondisi kita yang apatis, Yesus mengatakan bahwa hal ini harus diatasi. Barangsiapa menang, ia akan Kududukkan bersama-sama dengan Aku di atas takhta-Ku, sebagaimana Aku pun telah menang dan duduk bersama-sama dengan Bapa-Ku di atas takhta-Nya”” (Wahyu 3:21). Bagi sebagian dari kita, ini mungkin menjadi pertempuran terbesar yang pernah kita hadapi menyadari kondisi kita yang lemah dan merasa cukup dengan diri sendiri; menerima teguran Yesus; bertobat; dan menerima jubah kebenaran Yesus atas diri kita dengan mata yang benar-benar dapat melihat.
+
+Hal yang luar biasa adalah bahwa Yesus memahami kondisi kita yang apatis dan suam-suam kuku, dan Dia mengidentifikasi diri-Nya dengan kita (bukan berarti Yesus pernah suam-suam kuku). Dia berkata, Barangsiapa menang Sebagaimana Akupun telah menang (Wahyu 3:21). Karena Dia mati untuk menyelamatkan kita, Yesus telah mengalahkan dosa dan hukumannya. Dia memahami pertempuran melawan dosa yang kita hadapi dan berjanji akan menolong kita.
+
+Banyak orang dalam Alkitab merespons undangan Allah untuk menjalin hubungan perjanjian dengan-Nya. Inilah narasi besar atau tema utama dalam seluruh Alkitab. Ketika kita melihat beberapa orang ini, kita dapat melihat bahwa Allah berinteraksi dengan mereka secara berbeda dalam waktu dan situasi yang berbeda.
+
+Apakah yang dapat kita pelajari dari kisah-kisah ini tentang bagaimana Allah berinteraksi dengan manusia dalam berbagai situasi?
+
+Kejadian 2:7, Kejadian 3:8-10
+
+Kejadian 5:24
+
+Kejadian 6:13
+
+Kejadian 12:1-4
+
+Keluaran 34:29
+
+Baik Allah berjalan secara fisik bersama anak-anak-Nya maupun hanya berbicara dengan mereka, kenyataannya adalah bahwa sejak dahulu kala Allah selalu rindu untuk dekat dengan umat manusia. Apa pun kondisi hubungan Anda dengan Allah saat ini, Allah ingin dekat dengan Anda. Kita dapat membaca tentang hal ini dalam Yeremia 31: 3, 4 berikut ini:
+
+Dari jauh TUHAN menampakkan diri kepadanya: Aku mengasihi engkau dengan kasih yang kekal, sebab itu Aku melanjutkan kasih setia-Ku kepadamu. Aku akan membangun engkau kembali, sehingga engkau dibangun.
+
+Apakah hari Anda baru mau dimulai ataupun akan segera berakhir, Allah sedang mencari dan menanti Anda, ingin menarik Anda lebih dekat kepada-Nya. Ia ingin membangun-atau membangun kembali hubungan Anda dengan-Nya. Jika hal itu belum terjadi, maka kesalahannya bukan pada pihak-Nya, melainkan pada pihak kita.
+
+Apa sajakah hal-hal dalam hidup Anda saat ini yang, jika tidak diatasi, dapat dan memang menghalangi hubungan Anda dengan Allah?
+
+[DOC]
+id: 2026-q2-w01-d7
+tanggal: Jumat, 3 April 2026
+tanggal_iso: 2026-04-03
+minggu: 01
+triwulan: 2
+judul: Pendalaman
+
+[PELAJARAN]
+judul_harian: pendalaman
+tema_mingguan: cek realitas
+tema_triwulan: Bertumbuh Dalam Hubungan Dengan Tuhan
+[ISI]
+Sebelum kita dilahirkan, Allah sudah mengasihi kita; Dia sudah memiliki rencana agar kita mengenal Dia dan agar Dia dikenal oleh kita. Seperti Gembala yang baik, Dia mencari kita dan mengundang kita untuk tinggal di dalam-Nya setiap hari. Kita hanya perlu memilih untuk menanggapi-Nya, dan menggantikan keadaan kita yang menyedihkan dan suam-suam kuku seperti jemaat Laodikia dengan karunia-karunia baik dari-Nya (lihat Wahyu 3:18, 19).
+
+Seperti pertumbuhan yang lambat dari ranting pokok anggur, hubungan kita dengan Allah mungkin berkembang perlahan, atau bisa juga berkembang pesat setelah hujan rohani yang sangat dibutuhkan. Terlepas dari seberapa cepat kita bertumbuh dan seberapa banyak buah yang dihasilkan dalam hidup kita, kita membutuhkan getah setiap hari-yaitu Roh Kudus-agar kita tetap terhubung dengan Yesus.
+
+Tinggal di dalam Kristus berarti selalu menerima Roh-Nya, suatu kehidupan penyerahan yang tidak terbatas kepada pekerjaan-Nya. Saluran perhubungan harus terbuka terus-menerus antara manusia dan Allahnya. Sebagaimana carang pokok anggur senantiasa mengisap sari dari pokok anggur yang hidup, demikian juga kita harus berpaut pada Yesus, dan menerima dari pada-Nya oleh iman kekuatan dan kesempurnaan tabiat-Nya sendiri-Ellen G. White, Kerinduan Segala Zaman (1999), jld. 2, hlm. 320.
+
+Bagaimana caranya ranting kecil yang kering dan terputus bisa menjadi satu dengan pokok anggur induk? Bagaimana ia bisa mengambil bagian dalam kehidupan dan makanan dari pokok anggur yang hidup? Hanya dengan dicangkokkan ke dalam pokok anggur, dibawa ke dalam hubungan yang paling dekat. Serat demi serat, urat demi urat, ranting kecil itu melekat erat pada pokok anggur yang memberi kehidupan, sampai kehidupan pokok anggur itu menyatu dengan ranting, dan ranting itu menghasilkan buah seperti pokoknya”-Ellen G. White, Manuscript 67, 1897.
+
+Pertanyaan-Pertanyaan untuk Diskusi:
+
+Renungkan kembali kehidupan Anda. Apakah ada peristiwa yang membuat Anda tertidur secara rohani dan masuk ke dalam kondisi Laodikia? Peristiwa apakah yang justru mendekatkan Anda kepada Allah?
+
+Ellen G. White berbicara tentang menerima Roh-Nya secara terus-menerus. Seberapa sering Anda berdoa meminta Roh Kudus? Apakah yang mungkin berubah jika Anda sungguh-sungguh menerima Roh Kudus setiap hari?
+
+Apakah yang mungkin berubah jika kita, sebagai gereja, berdoa memohon Roh Kudus dengan lebih sungguh-sungguh dan lebih teratur?
+
+Bersikaplah jujur, bahkan jika itu menyakitkan, terhadap diri Anda sendiri mengenai hubungan Anda dengan Allah. Pilihan sadar apa yang perlu Anda buat agar memiliki kedekatan dengan-Nya seperti yang Ia inginkan, tetapi yang selama ini Anda halangi?
+
+Ringkasan: Sebelum kita dapat mulai bertumbuh dalam hubungan dengan Allah, kita harus berhenti sejenak untuk merenungkan seperti apa hubungan kita dengan-Nya saat ini. Jika hubungan itu bersifat Laodikia atau jika ranting-ranting kita tidak subur, Yesus memiliki solusi yang sempurna untuk kondisi rohani kita: yaitu tinggal di dalam Dia.
+
+[DOC]
+id: 2026-q2-w01-d1
+tanggal: Sabtu, 28 Maret 2026
+tanggal_iso: 2026-03-28
+minggu: 01
+triwulan: 2
+judul: Cek Realitas
+
+[PELAJARAN]
+judul_harian: cek realitas
+tema_mingguan: cek realitas
+tema_triwulan: Bertumbuh Dalam Hubungan Dengan Tuhan
+
+[AYAT]
+hafalan: Yohanes 15: 9
+isi_ayat: Seperti Bapa telah mengasihi Aku, demikianlah juga Aku telah mengasihi kamu; tinggallah di dalam kasih-Ku itu”
+[ISI]
+### Untuk Pelajaran Pekan Ini Bacalah
+Wahyu 3:14-22; Wahyu 4:9-11; Kejadian 2:7; Kejadian 3:8-10; Yeremia 31:3, 4; Yohanes 15:1-11; Roma 8:9–11.
+
+Ayat Hafalan
+Seperti Bapa telah mengasihi Aku, demikianlah juga Aku telah mengasihi kamu; tinggallah di dalam kasih-Ku itu” (Yohanes 15: 9).
+Bagaimana Anda menggambarkan hubungan Anda dengan Allah saat ini? Apakah hubungan itu hidup dan kuat? Apakah Anda meluangkan waktu untuk berinvestasi dalam hubungan ini, mencari firman-Nya yang diinspirasikan, dan berbicara kepada-Nya sebagai seorang Sahabat? Jika ya, berapa banyak waktu yang Anda habiskan untuk melakukannya?
+Selain itu, apakah Anda terdorong untuk membagikan kepada orang lain tentang hubungan Anda dengan Allah karena itu adalah hubungan yang paling indah dalam hidup Anda? Atau, sebaliknya, apakah hubungan Anda dengan Allah telah melemah seiring waktu? Hubungan itu masih ada, ya, dan Anda sesekali menyapa-Nya', tetapi sejujurnya, hubungan itu tidak lagi sekuat dulu. Atau mungkin Anda berada di tengah-tengah, seperti yang Alkitab sebut sebagai suam-suam kuku (Wahyu 3:16).
+
+Pernahkah Anda bertanya-tanya apakah para malaikat heran mengapa kita tidak hidup dalam kekaguman kepada Juruselamat dan Penebus kita, dengan hati yang berharap dan pikiran yang rindu untuk semakin dekat kepada Allah setiap hari? Karena sesungguhnya, hubungan dengan Allah mengubah segalanya baik di dunia ini maupun untuk kekekalan.
+Pekan ini, mari kita renungkan kondisi hubungan kita dengan Allah saat ini dan apa nasihat Alkitab bagi kita. Sungguh, kita tidak bisa bergerak dari tempat kita sekarang ke tempat yang lebih baik sebelum kita melakukan cek realitas yang jujur terhadap diri kita sendiri dan mendengarkan solusi yang Yesus tawarkan.
+Pelajarilah pelajaran pekan ini untuk persiapan Sabat, 4 April.
+
+### References
+
+- [1] 2026-q2-w01-d3
+- [2] 2026-q2-w01-d7
+- [3] 2026-q2-w01-d1","Yesus berjanji bahwa jika kita mendengar suara-Nya dan membuka pintu, Ia akan masuk dan makan bersama-sama dengan kita, menggambarkan hubungan yang intim dan hangat.",1,1,1,global,26.435710906982422,2026-05-08 12:37:01
+Apa janji indah yang terdapat dalam Wahyu 3:20 terkait hubungan pribadi dengan Yesus?,Nodes retrieved from LightRAG,"[assistant] Dalam Wahyu 3:20, Yesus memberikan janji yang indah bahwa Ia ingin duduk bersama Anda dan saya untuk makan bersama, menggambarkan hubungan yang dekat, saling terbuka, dan pembicaraan yang hangat. Ia berdiri dengan sabar, menunggu dan mengetuk pintu hati Anda, mengundang Anda untuk memiliki hubungan yang dekat dengan-Nya. [1]","Yesus berjanji bahwa jika kita mendengar suara-Nya dan membuka pintu, Ia akan masuk dan makan bersama-sama dengan kita, menggambarkan hubungan yang intim dan hangat.",1,1,1,naive,17.09155583381653,2026-05-08 12:37:21
+Apa janji indah yang terdapat dalam Wahyu 3:20 terkait hubungan pribadi dengan Yesus?,Nodes retrieved from LightRAG,"Dalam Wahyu 3:20, Yesus memberikan janji kepada mereka yang membuka pintu hati mereka kepada-Nya. Allah semesta alam berhasrat untuk duduk bersama Anda dan saya untuk makan bersama, menunjukkan hubungan yang intim, terbuka, dan hangat. Yesus digambarkan berdiri sabar di pintu hati Anda, mengetuk dengan lembut dan menunggu untuk diundang masuk. Dia tidak akan memaksa masuk, melainkan menunggu Anda membuka pintu agar Dia dapat masuk ke dalam hidup Anda. Janji ini menggambarkan hubungan yang Yesus inginkan dengan setiap individu, yang akan memberikan kekayaan spiritual, jubah kebenaran, dan mata yang terbuka untuk melihat kebenaran. [1]","Yesus berjanji bahwa jika kita mendengar suara-Nya dan membuka pintu, Ia akan masuk dan makan bersama-sama dengan kita, menggambarkan hubungan yang intim dan hangat.",0,1,1,mix,19.218396186828613,2026-05-08 12:37:43
