@@ -17,7 +17,7 @@ MODEL_JUDGE = "gemini-2.5-flash"
 
 
 def save_experiment(data):
-    file_path = "new_evaluation_results.csv"
+    file_path = "11-new_evaluation_results.csv"
     df = pd.DataFrame([data])
     if not os.path.isfile(file_path):
         df.to_csv(file_path, index=False)
@@ -66,15 +66,6 @@ async def llm_model_func(prompt, system_prompt=None, history_messages=[], **kwar
     )
 
 
-@wrap_embedding_func_with_attrs(
-    embedding_dim=1536,
-    max_token_size=2048,
-    model_name="gemini-embedding-001",
-)
-async def embedding_func(texts: list[str]) -> np.ndarray:
-    return await gemini_embed.func(
-        texts, api_key=os.getenv("GEMINI_API_KEY"), model="models/gemini-embedding-001"
-    )
 
 
 async def run_evaluation():
@@ -89,136 +80,384 @@ async def run_evaluation():
         llm_model_name="gemini-2.5-flash-lite"
     )
     await rag.initialize_storages()
-    question_dataset = [
-        {
-            "id": "Q01",
-            "question": "Apa judul pelajaran untuk hari Sabtu?",
-            "reference": "Judul pelajaran untuk hari Sabtu (Hari ke-1) adalah 'Cek Realitas'."
-        },
-        {
-            "id": "Q02",
-            "question": "Mengapa 'Cek Realitas' (materi Sabtu) menjadi langkah awal yang penting sebelum kita membahas 'Kondisi Kita' (materi Minggu)?",
-            "reference": "Karena kita tidak bisa bergerak ke tempat yang lebih baik sebelum melakukan kejujuran terhadap diri sendiri mengenai kondisi hubungan kita saat ini dan mendengarkan solusi yang Yesus tawarkan."
-        },
-        # {
-        #     "id": "Q03",
-        #     "question": "Dalam materi hari Minggu, Yesus memperkenalkan diri sebagai 'Saksi yang Setia dan Benar'. Apa hubungannya dengan diagnosis-Nya terhadap jemaat Laodikia?",
-        #     "reference": "Sebagai Saksi yang Setia, Yesus tidak berbohong; Ia berbicara jujur bahwa kita sering merasa kaya dan tidak butuh apa-apa, padahal sebenarnya kita melarat, buta, dan telanjang."
-        # },
-        # {
-        #     "id": "Q04",
-        #     "question": "Jika seorang anggota kelas bertanya, 'Mengapa Tuhan menegur kita dengan begitu keras di Wahyu 3:19?', bagaimana jawaban Anda berdasarkan materi hari Senin?",
-        #     "reference": "Tuhan menegur justru karena kasih-Nya yang sangat dalam; Ia tidak puas dengan hubungan yang setengah-setengah atau sekadar 'datang kalau butuh saja', melainkan menginginkan hubungan yang jauh lebih kuat."
-        # },
-        # {
-        #     "id": "Q05",
-        #     "question": "Apa janji indah yang terdapat dalam Wahyu 3:20 terkait hubungan pribadi dengan Yesus?",
-        #     "reference": "Yesus berjanji bahwa jika kita mendengar suara-Nya dan membuka pintu, Ia akan masuk dan makan bersama-sama dengan kita, menggambarkan hubungan yang intim dan hangat."
-        # },
-        # {
-        #     "id": "Q06",
-        #     "question": "Materi hari Selasa menyebutkan 'pertempuran terbesar' bagi manusia. Apakah itu?",
-        #     "reference": "Pertempuran terbesar adalah menyadari kondisi kita yang lemah dan merasa cukup dengan diri sendiri, lalu menerima teguran Yesus, bertobat, dan menerima jubah kebenaran-Nya."
-        # },
-        # {
-        #     "id": "Q07",
-        #     "question": "Bagaimana kisah Henokh (Kejadian 5:24) dan Musa (Keluaran 34:29) pada materi Selasa mendukung tema 'Kasih yang Tak Berkesudahan'?",
-        #     "reference": "Kisah-kisah tersebut menunjukkan bahwa sejak dahulu kala Allah selalu rindu untuk dekat dan berinteraksi secara pribadi dengan umat manusia dalam berbagai situasi."
-        # },
-        # {
-        #     "id": "Q08",
-        #     "question": "Dalam materi hari Rabu tentang 'Tinggal' (Abide), berapa kali Yesus mengulang kata tersebut dalam Yohanes 15:1-11 dan apa maknanya?",
-        #     "reference": "Kata 'tinggal' diulang sebanyak sepuluh kali, yang berarti hidup dalam hubungan yang terus-menerus terhubung dengan Yesus sebagai Pokok Anggur."
-        # },
-        # {
-        #     "id": "Q09",
-        #     "question": "Berdasarkan materi hari Rabu, apa yang membuktikan bahwa seseorang adalah murid Yesus yang benar?",
-        #     "reference": "Buktinya adalah dengan 'berbuah', yang dihasilkan dari tinggal di dalam Dia, bukan karena usaha sendiri, melainkan untuk kemuliaan Allah."
-        # },
-        # {
-        #     "id": "Q10",
-        #     "question": "Bagaimana metafora 'getah' pada hari Kamis menjelaskan cara kerja Roh Kudus dalam kehidupan orang percaya?",
-        #     "reference": "Getah ibarat Roh Kudus yang mengalir dari akar menuju tunas untuk menghidupkan kembali ranting yang kering sehingga pertumbuhan dapat terjadi."
-        # },
-        # {
-        #     "id": "Q11",
-        #     "question": "Sebutkan empat peran penting Roh Kudus bagi kita menurut Yohanes pasal 14, 15, dan 16 yang dibahas pada hari Kamis.",
-        #     "reference": "Menjadi Penghibur, menyingkapkan Yesus, menyadarkan akan dosa, dan menuntun ke dalam seluruh kebenaran."
-        # },
-        # {
-        #     "id": "Q12",
-        #     "question": "Bagaimana kutipan Ellen G. White pada hari Jumat menjelaskan proses penyatuan ranting yang kering dengan pokok anggur?",
-        #     "reference": "Ranting itu harus dicangkokkan sehingga serat demi serat dan urat demi urat melekat erat sampai kehidupan pokok anggur itu menyatu dengan ranting."
-        # },
-        # {
-        #     "id": "Q13",
-        #     "question": "Apa hubungan antara 'suam-suam kuku' (Hari Minggu) dengan 'tidak adanya buah' (Hari Rabu)?",
-        #     "reference": "Kondisi suam-suam kuku adalah bentuk keapatisan rohani; jika kita hanya terlihat seperti tinggal di dalam Yesus tetapi tidak berbuah, pada akhirnya ranting itu akan mengering dan dipotong."
-        # },
-        # {
-        #     "id": "Q14",
-        #     "question": "Apa 'obat penawar' bagi kondisi Laodikia menurut rangkuman pelajaran hari Rabu?",
-        #     "reference": "Obat penawarnya adalah tinggal (abide) di dalam Yesus, yang merupakan rahasia besar kehidupan yang penuh makna."
-        # },
-        # {
-        #     "id": "Q15",
-        #     "question": "Dalam materi hari Kamis, mengapa mengikuti Allah kadang terasa sebagai 'kewajiban yang melelahkan'?",
-        #     "reference": "Hal itu terjadi jika agama hanya berfokus pada tindakan luar dan aturan, bukan pada hubungan yang didasari kasih timbal balik dan kebebasan memilih dari dalam hati."
-        # },
-        # {
-        #     "id": "Q16",
-        #     "question": "Menurut Yeremia 31:3 (Hari Selasa & Kamis), apa motivasi utama Allah dalam menarik manusia kepada-Nya?",
-        #     "reference": "Motivasinya adalah kasih yang kekal; Ia mengasihi kita terlebih dahulu sebelum kita merespons-Nya."
-        # },
-        # {
-        #     "id": "Q17",
-        #     "question": "Bagaimana perumpamaan musim dingin pada hari Kamis menjelaskan pertumbuhan rohani?",
-        #     "reference": "Sama seperti tunas yang dehidrasi di musim dingin akan tumbuh kembali saat akar menyerap air di musim semi, kita pun butuh Roh Kudus untuk menghidupkan kembali kerohanian kita."
-        # },
-        # {
-        #     "id": "Q18",
-        #     "question": "Apa yang ditawarkan Yesus sebagai pengganti kemelaratan rohani kita dalam 'pertukaran' yang disebutkan pada hari Minggu?",
-        #     "reference": "Yesus menawarkan emas-Nya (iman), pakaian putih-Nya (kebenaran), dan salep mata-Nya (pemahaman rohani)."
-        # },
-        # {
-        #     "id": "Q19",
-        #     "question": "Menurut materi hari Senin, mengapa Yesus digambarkan 'mengetuk pintu' dan tidak langsung menerobos masuk?",
-        #     "reference": "Karena Yesus tidak memaksa; Ia menghormati kebebasan memilih kita dan menunggu keputusan sadar kita untuk membuka hati bagi-Nya."
-        # },
-        # {
-        #     "id": "Q20",
-        #     "question": "Apa tujuan utama pemangkasan ranting oleh Pengusaha Anggur (Bapa) menurut materi hari Rabu?",
-        #     "reference": "Tujuannya adalah agar ranting tersebut dapat menghasilkan lebih banyak buah dalam jangka panjang."
-        # },
-        # {
-        #     "id": "Q21",
-        #     "question": "Bagaimana hubungan antara ketaatan pada perintah Tuhan dengan kasih menurut 1 Yohanes 5:3 (Hari Rabu)?",
-        #     "reference": "Menuruti perintah-perintah-Nya adalah bentuk nyata dari kasih kita kepada Allah, dan perintah-Nya itu tidaklah berat jika dilakukan atas dasar hubungan kasih."
-        # },
-        # {
-        #     "id": "Q22",
-        #     "question": "Jika seseorang merasa 'terlalu sibuk' untuk Tuhan, nasihat apa yang diberikan pada materi hari Senin?",
-        #     "reference": "Yesus tidak ingin mengganggu kesibukan kita, tetapi waktu sangat singkat; jika kita mendengar-Nya mengetuk, kita harus membuat keputusan sadar untuk membuka pintu."
-        # },
-        # {
-        #     "id": "Q23",
-        #     "question": "Apa konsekuensi bagi ranting yang tidak tinggal di dalam pokok anggur menurut Yohanes 15?",
-        #     "reference": "Ranting tersebut tidak dapat berbuah dari dirinya sendiri, akan menjadi kering, dipotong, dan akhirnya dibuang."
-        # },
-        # {
-        #     "id": "Q24",
-        #     "question": "Bagaimana pengaruh memandang Salib terhadap keputusan kita untuk membuka hati (Hari Senin)?",
-        #     "reference": "Merenungkan makna Salib dapat menginspirasi kita untuk menyadari betapa besarnya pengorbanan Yesus sehingga kita tergerak untuk merespons kasih-Nya."
-        # },
-        # {
-        #     "id": "Q25",
-        #     "question": "Apa kesimpulan utama dari seluruh pelajaran pekan ini mengenai pertumbuhan hubungan dengan Allah?",
-        #     "reference": "Pertumbuhan hanya mungkin terjadi jika kita melakukan cek realitas yang jujur, bertobat dari kondisi suam-suam kuku, dan membuat pilihan sadar setiap hari untuk tinggal di dalam Yesus serta dipenuhi oleh Roh Kudus."
-        # }
-    ]
 
     modes = ["hybrid", "local", "global", "naive", "mix"]
+    question_dataset = [
 
+        # ══════════════════════════════════════════════════════
+        # TIPE 1: FAKTUAL (Q01–Q09)
+        # Merujuk fakta spesifik dari dokumen harian tertentu
+        # ══════════════════════════════════════════════════════
+
+        # {
+        #     "id": "Q01",
+        #     "type": "faktual",
+        #     "source_doc": "01.txt — Sabtu",
+        #     "question": "Apa judul pelajaran hari Sabtu dan apa ayat hafalan minggu ini?",
+        #     "reference": (
+        #         "Judul pelajaran hari Sabtu adalah 'Cek Realitas'. "
+        #         "Ayat hafalan minggu ini adalah Yohanes 15:9: "
+        #         "'Seperti Bapa telah mengasihi Aku, demikianlah juga Aku telah mengasihi kamu; "
+        #         "tinggallah di dalam kasih-Ku itu.'"
+        #     )
+        # },
+        #
+        # {
+        #     "id": "Q02",
+        #     "type": "faktual",
+        #     "source_doc": "01.txt — Sabtu",
+        #     "question": "Bacaan Alkitab apa saja yang harus dipelajari untuk pelajaran pekan ini?",
+        #     "reference": (
+        #         "Bacaan untuk pelajaran pekan ini adalah: "
+        #         "Wahyu 3:14-22; Wahyu 4:9-11; Kejadian 2:7; Kejadian 3:8-10; "
+        #         "Yeremia 31:3, 4; Yohanes 15:1-11; dan Roma 8:9–11."
+        #     )
+        # },
+        #
+        # {
+        #     "id": "Q03",
+        #     "type": "faktual",
+        #     "source_doc": "02.txt — Minggu",
+        #     "question": "Dalam Wahyu 3:14, bagaimana Yesus memperkenalkan diri-Nya kepada jemaat Laodikia?",
+        #     "reference": (
+        #         "Dalam Wahyu 3:14, Yesus memperkenalkan diri-Nya sebagai "
+        #         "'Saksi yang setia dan benar, permulaan dari ciptaan Allah.' "
+        #         "Sebagai Saksi yang setia dan benar, Dia tidak berbohong "
+        #         "melainkan berbicara dengan jelas dan jujur."
+        #     )
+        # },
+        #
+        # {
+        #     "id": "Q04",
+        #     "type": "faktual",
+        #     "source_doc": "02.txt — Minggu",
+        #     "question": "Apa tiga hal yang Yesus tawarkan sebagai pertukaran dalam Wahyu 3:18 kepada jemaat Laodikia?",
+        #     "reference": (
+        #         "Dalam Wahyu 3:18, Yesus menawarkan tiga hal sebagai pertukaran: "
+        #         "(1) emas-Nya sebagai pengganti keapatisan kita, "
+        #         "(2) pakaian putih-Nya (jubah kebenaran) untuk menutupi kita, "
+        #         "dan (3) salep mata-Nya agar kita dapat melihat kebenaran rohani."
+        #     )
+        # },
+        #
+        # {
+        #     "id": "Q05",
+        #     "type": "faktual",
+        #     "source_doc": "03.txt — Senin",
+        #     "question": "Janji apa yang diberikan Yesus dalam Wahyu 3:20 dan apa syarat untuk menerimanya?",
+        #     "reference": (
+        #         "Dalam Wahyu 3:20, Yesus berjanji bahwa Dia akan masuk dan makan bersama "
+        #         "dengan orang yang membuka pintu bagi-Nya — menggambarkan hubungan yang intim dan hangat. "
+        #         "Syaratnya adalah kita harus mendengar suara-Nya dan secara sadar membuka pintu hati bagi-Nya. "
+        #         "Yesus tidak menerobos masuk atau memaksa, melainkan menunggu keputusan sadar kita."
+        #     )
+        # },
+        #
+        # {
+        #     "id": "Q06",
+        #     "type": "faktual",
+        #     "source_doc": "04.txt — Selasa",
+        #     "question": "Sebutkan kisah-kisah dalam Alkitab pada materi hari Selasa yang menunjukkan Allah rindu dekat dengan manusia.",
+        #     "reference": (
+        #         "Materi hari Selasa menyebutkan kisah-kisah berikut: "
+        #         "Kejadian 2:7 (Allah menciptakan manusia), "
+        #         "Kejadian 3:8-10 (Allah berjalan bersama Adam dan Hawa), "
+        #         "Kejadian 5:24 (Henokh berjalan bersama Allah), "
+        #         "Kejadian 6:13 (Allah berbicara kepada Nuh), "
+        #         "Kejadian 12:1-4 (Allah memanggil Abraham), "
+        #         "dan Keluaran 34:29 (Musa berjumpa dengan Allah). "
+        #         "Kisah-kisah ini membuktikan bahwa sejak dahulu kala Allah selalu rindu untuk dekat dengan umat manusia."
+        #     )
+        # },
+        #
+        # {
+        #     "id": "Q07",
+        #     "type": "faktual",
+        #     "source_doc": "05.txt — Rabu",
+        #     "question": "Berapa kali kata 'tinggal' diulang dalam Yohanes 15:1-11 dan apa maknanya?",
+        #     "reference": (
+        #         "Kata 'tinggal' (abide) diulang sebanyak sepuluh kali dalam Yohanes 15:1-11. "
+        #         "Maknanya adalah hidup dalam hubungan yang terus-menerus terhubung dengan Yesus. "
+        #         "Tinggal di dalam Yesus berarti menuruti perintah-perintah-Nya, berbuah untuk kemuliaan-Nya, "
+        #         "dan hidup dalam sukacita yang besar sebagai bentuk tanggapan kasih kepada-Nya."
+        #     )
+        # },
+        #
+        # {
+        #     "id": "Q08",
+        #     "type": "faktual",
+        #     "source_doc": "06.txt — Kamis",
+        #     "question": "Sebutkan empat peran Roh Kudus yang disebutkan dalam materi hari Kamis berdasarkan Yohanes pasal 14, 15, dan 16.",
+        #     "reference": (
+        #         "Empat peran Roh Kudus menurut materi hari Kamis adalah: "
+        #         "(1) Menjadi Penghibur kita (Yohanes 14:16-18), "
+        #         "(2) Menyingkapkan Yesus kepada kita (Yohanes 15:26), "
+        #         "(3) Menyadarkan kita akan dosa (Yohanes 16:7-8), "
+        #         "dan (4) Menuntun kita ke dalam seluruh kebenaran (Yohanes 16:13)."
+        #     )
+        # },
+        #
+        # {
+        #     "id": "Q09",
+        #     "type": "faktual",
+        #     "source_doc": "07.txt — Jumat",
+        #     "question": "Apa yang dikatakan Ellen G. White tentang cara ranting kering bisa menyatu dengan pokok anggur?",
+        #     "reference": (
+        #         "Ellen G. White dalam Manuscript 67, 1897 menjelaskan bahwa ranting kecil yang kering "
+        #         "harus dicangkokkan ke dalam pokok anggur dan dibawa ke dalam hubungan yang paling dekat. "
+        #         "'Serat demi serat, urat demi urat, ranting kecil itu melekat erat pada pokok anggur yang memberi kehidupan, "
+        #         "sampai kehidupan pokok anggur itu menyatu dengan ranting, "
+        #         "dan ranting itu menghasilkan buah seperti pokoknya.'"
+        #     )
+        # },
+        #
+        # # ══════════════════════════════════════════════════════
+        # # TIPE 2: TEMATIK (Q10–Q18)
+        # # Tema dan konsep teologis dalam minggu ini
+        # # ══════════════════════════════════════════════════════
+        #
+        # {
+        #     "id": "Q10",
+        #     "type": "tematik",
+        #     "source_doc": "01.txt + 02.txt",
+        #     "question": "Apa tema mingguan pelajaran ini dan mengapa tema tersebut penting sebagai langkah awal pertumbuhan rohani?",
+        #     "reference": (
+        #         "Tema mingguan adalah 'Cek Realitas', bagian dari tema triwulan 'Bertumbuh Dalam Hubungan Dengan Tuhan'. "
+        #         "Tema ini penting karena kita tidak bisa bergerak ke tempat yang lebih baik secara rohani "
+        #         "sebelum melakukan kejujuran terhadap diri sendiri mengenai kondisi hubungan kita dengan Allah saat ini "
+        #         "dan mendengarkan solusi yang Yesus tawarkan."
+        #     )
+        # },
+        #
+        # {
+        #     "id": "Q11",
+        #     "type": "tematik",
+        #     "source_doc": "02.txt — Minggu",
+        #     "question": "Apa yang dimaksud dengan kondisi 'suam-suam kuku' menurut pelajaran hari Minggu dan mengapa Yesus tidak menyukainya?",
+        #     "reference": (
+        #         "Kondisi 'suam-suam kuku' (Wahyu 3:16) adalah kondisi di mana seseorang tidak panas dan tidak dingin secara rohani. "
+        #         "Dari sudut pandang kita sendiri, kita merasa tidak membutuhkan apa pun dan hanya meluangkan sedikit waktu bersama Allah. "
+        #         "Yesus tidak menyukainya karena kondisi ini mencerminkan keapatisan rohani — "
+        #         "kita berpikir sudah cukup padahal sebenarnya kita melarat, malang, miskin, buta, dan telanjang secara rohani. "
+        #         "Yesus menginginkan hubungan yang sepenuh hati, bukan yang setengah-setengah."
+        #     )
+        # },
+        #
+        # {
+        #     "id": "Q12",
+        #     "type": "tematik",
+        #     "source_doc": "03.txt — Senin",
+        #     "question": "Mengapa Yesus menegur jemaat-Nya menurut pelajaran hari Senin, dan apa yang membuktikan bahwa teguran itu berasal dari kasih?",
+        #     "reference": (
+        #         "Yesus menegur jemaat-Nya karena kasih-Nya yang sangat dalam — "
+        #         "'Barangsiapa Kukasihi, ia Kutegor dan Kuhajar' (Wahyu 3:19). "
+        #         "Ini bukan karena Dia tidak peduli, melainkan justru sebaliknya: "
+        #         "Dia menginginkan hubungan yang jauh lebih kuat dan lebih dalam. "
+        #         "Bukti bahwa teguran itu dari kasih adalah bahwa Yesus sendiri yang menempuh jalan penderitaan di bumi "
+        #         "dan mati untuk menyelamatkan kita — Dia tidak puas dengan sikap setengah-setengah kita."
+        #     )
+        # },
+        #
+        # {
+        #     "id": "Q13",
+        #     "type": "tematik",
+        #     "source_doc": "04.txt — Selasa",
+        #     "question": "Apa yang dimaksud 'pertempuran terbesar' yang disebutkan dalam pelajaran hari Selasa?",
+        #     "reference": (
+        #         "Pertempuran terbesar yang disebutkan dalam pelajaran hari Selasa adalah: "
+        #         "menyadari kondisi kita yang lemah dan merasa cukup dengan diri sendiri, "
+        #         "kemudian menerima teguran Yesus, bertobat, "
+        #         "dan menerima jubah kebenaran Yesus dengan mata yang benar-benar dapat melihat. "
+        #         "Ini adalah perjuangan melawan keapatisan dan kesombongan rohani kita sendiri."
+        #     )
+        # },
+        #
+        # {
+        #     "id": "Q14",
+        #     "type": "tematik",
+        #     "source_doc": "05.txt — Rabu",
+        #     "question": "Apa 'obat penawar' bagi kondisi Laodikia menurut pelajaran hari Rabu?",
+        #     "reference": (
+        #         "Obat penawar bagi kondisi Laodikia menurut pelajaran hari Rabu adalah 'tinggal' (abide) di dalam Yesus "
+        #         "sebagaimana disebutkan dalam Wahyu 3:20 dan Yohanes 15:4. "
+        #         "Ini adalah rahasia besar dari kehidupan yang penuh makna dan berarti, "
+        #         "di mana kita hidup dalam hubungan yang terus terhubung dengan Yesus "
+        #         "dan menuruti perintah-perintah-Nya sebagai bentuk kasih kepada-Nya."
+        #     )
+        # },
+        #
+        # {
+        #     "id": "Q15",
+        #     "type": "tematik",
+        #     "source_doc": "06.txt — Kamis",
+        #     "question": "Mengapa mengikuti Allah kadang terasa seperti 'kewajiban yang melelahkan' dan bagaimana seharusnya hubungan dengan Allah itu terasa?",
+        #     "reference": (
+        #         "Mengikuti Allah terasa seperti kewajiban yang melelahkan ketika agama hanya berfokus pada tindakan luar "
+        #         "dan aturan-aturan, bukan pada apa yang ada di dalam hati. "
+        #         "Seharusnya hubungan dengan Allah didasari kasih timbal balik dan kebebasan memilih — "
+        #         "di mana Allah terlebih dahulu memilih kita dan kita merespons dengan sadar "
+        #         "bukan karena paksaan melainkan karena kasih yang tulus."
+        #     )
+        # },
+        #
+        # {
+        #     "id": "Q16",
+        #     "type": "tematik",
+        #     "source_doc": "06.txt — Kamis",
+        #     "question": "Bagaimana metafora musim dingin pada pelajaran hari Kamis menjelaskan pertumbuhan rohani melalui Roh Kudus?",
+        #     "reference": (
+        #         "Metafora musim dingin menjelaskan bahwa tunas pada ranting menjadi dehidrasi dan terisolasi di musim dingin. "
+        #         "Ketika musim semi tiba, akar menyerap air dan getah mengalir dari batang menuju tunas sehingga memicu pertumbuhan. "
+        #         "Secara rohani, getah ini ibarat Roh Kudus — kita mungkin seperti ranting yang mati secara rohani, "
+        #         "tetapi ketika kita memilih meluangkan waktu bersama Allah, "
+        #         "Roh Kudus dicurahkan ke dalam diri kita dan menghidupkan kita kembali sehingga kita mulai bertumbuh."
+        #     )
+        # },
+        #
+        # {
+        #     "id": "Q17",
+        #     "type": "tematik",
+        #     "source_doc": "07.txt — Jumat",
+        #     "question": "Apa ringkasan pelajaran minggu ini menurut dokumen hari Jumat?",
+        #     "reference": (
+        #         "Ringkasan pelajaran minggu ini menurut hari Jumat adalah: "
+        #         "Sebelum kita dapat mulai bertumbuh dalam hubungan dengan Allah, "
+        #         "kita harus berhenti sejenak untuk merenungkan seperti apa hubungan kita dengan-Nya saat ini. "
+        #         "Jika hubungan itu bersifat Laodikia atau jika ranting-ranting kita tidak subur, "
+        #         "Yesus memiliki solusi yang sempurna untuk kondisi rohani kita: yaitu tinggal di dalam Dia."
+        #     )
+        # },
+        #
+        # {
+        #     "id": "Q18",
+        #     "type": "tematik",
+        #     "source_doc": "07.txt — Jumat",
+        #     "question": "Apa yang dikatakan Ellen G. White dalam Kerinduan Segala Zaman tentang makna tinggal di dalam Kristus?",
+        #     "reference": (
+        #         "Ellen G. White dalam Kerinduan Segala Zaman (1999), jilid 2, halaman 320 menjelaskan: "
+        #         "'Tinggal di dalam Kristus berarti selalu menerima Roh-Nya, "
+        #         "suatu kehidupan penyerahan yang tidak terbatas kepada pekerjaan-Nya. "
+        #         "Saluran perhubungan harus terbuka terus-menerus antara manusia dan Allahnya. "
+        #         "Sebagaimana carang pokok anggur senantiasa mengisap sari dari pokok anggur yang hidup, "
+        #         "demikian juga kita harus berpaut pada Yesus, dan menerima dari pada-Nya oleh iman "
+        #         "kekuatan dan kesempurnaan tabiat-Nya sendiri.'"
+        #     )
+        # },
+        #
+        # # ══════════════════════════════════════════════════════
+        # # TIPE 3: LINTAS HARI (Q19–Q25)
+        # # Hubungan antar konsep dari hari yang berbeda
+        # # ══════════════════════════════════════════════════════
+        #
+        # {
+        #     "id": "Q19",
+        #     "type": "lintas_hari",
+        #     "source_doc": "01.txt + 02.txt",
+        #     "question": "Bagaimana hubungan antara 'Cek Realitas' (hari Sabtu) dengan 'Kondisi Kita' (hari Minggu)?",
+        #     "reference": (
+        #         "Hari Sabtu ('Cek Realitas') menjadi dasar yang harus dilakukan sebelum memahami 'Kondisi Kita' di hari Minggu. "
+        #         "Kita tidak bisa bergerak ke tempat yang lebih baik secara rohani "
+        #         "sebelum melakukan kejujuran terhadap diri sendiri. "
+        #         "Hari Minggu kemudian mengungkap kondisi konkret yang teridentifikasi setelah cek realitas itu — "
+        #         "yaitu kondisi suam-suam kuku jemaat Laodikia yang digambarkan dalam Wahyu 3:14-17."
+        #     )
+        # },
+        #
+        # {
+        #     "id": "Q20",
+        #     "type": "lintas_hari",
+        #     "source_doc": "02.txt + 03.txt",
+        #     "question": "Bagaimana 'Kondisi Kita' (hari Minggu) menjadi latar belakang bagi 'Teguran, Pertobatan, dan Upah' (hari Senin)?",
+        #     "reference": (
+        #         "Hari Minggu mengidentifikasi kondisi kita yang suam-suam kuku dan melarat secara rohani. "
+        #         "Kondisi inilah yang menjadi alasan Yesus memberikan teguran di hari Senin (Wahyu 3:19). "
+        #         "Yesus tidak bisa menegur kita tanpa kita terlebih dahulu menyadari kondisi kita yang salah. "
+        #         "Teguran di hari Senin adalah respons kasih Yesus terhadap kondisi yang terungkap di hari Minggu, "
+        #         "dan menghasilkan undangan untuk bertobat serta janji indah dalam Wahyu 3:20."
+        #     )
+        # },
+        #
+        # {
+        #     "id": "Q21",
+        #     "type": "lintas_hari",
+        #     "source_doc": "03.txt + 04.txt",
+        #     "question": "Bagaimana tema 'Kasih yang Tak Berkesudahan' (hari Selasa) memperkuat dan melengkapi pesan teguran di hari Senin?",
+        #     "reference": (
+        #         "Teguran di hari Senin mungkin terasa keras, tetapi hari Selasa memberikan fondasi mengapa teguran itu ada — "
+        #         "yaitu kasih Allah yang tak berkesudahan seperti tertulis dalam Yeremia 31:3: "
+        #         "'Aku mengasihi engkau dengan kasih yang kekal.' "
+        #         "Kisah-kisah dari Kejadian hingga Keluaran membuktikan bahwa Allah selalu rindu dekat dengan manusia. "
+        #         "Jadi teguran di hari Senin bukan untuk menyakiti, "
+        #         "melainkan ekspresi dari kasih tak berkesudahan yang dibuktikan sepanjang sejarah di hari Selasa."
+        #     )
+        # },
+        #
+        # {
+        #     "id": "Q22",
+        #     "type": "lintas_hari",
+        #     "source_doc": "02.txt + 05.txt",
+        #     "question": "Apa hubungan antara kondisi 'suam-suam kuku' (hari Minggu) dengan konsep 'tidak adanya buah' (hari Rabu)?",
+        #     "reference": (
+        #         "Kondisi suam-suam kuku di hari Minggu adalah bentuk keapatisan rohani yang terlihat dari luar. "
+        #         "Hari Rabu memperdalam ini dengan konsep 'tinggal' dalam Yohanes 15 — "
+        #         "jika kita hanya terlihat seperti tinggal di dalam Yesus tetapi tidak sungguh-sungguh terhubung, "
+        #         "buktinya akan terlihat dari tidak adanya buah. "
+        #         "Ranting yang suam-suam kuku pada akhirnya akan mengering dan dipotong oleh Pengusaha Anggur. "
+        #         "Jadi kondisi suam-suam kuku (hari Minggu) adalah akar masalah, "
+        #         "dan tidak berbuah (hari Rabu) adalah akibatnya."
+        #     )
+        # },
+        #
+        # {
+        #     "id": "Q23",
+        #     "type": "lintas_hari",
+        #     "source_doc": "05.txt + 06.txt",
+        #     "question": "Bagaimana konsep 'tinggal' (hari Rabu) dan peran 'Roh Kudus sebagai getah' (hari Kamis) saling melengkapi?",
+        #     "reference": (
+        #         "Hari Rabu menjelaskan bahwa kita harus tinggal di dalam Yesus, "
+        #         "tetapi kita tidak bisa melakukannya dengan kekuatan sendiri — "
+        #         "'kita tidak bisa membuat buah itu tumbuh dengan usaha sendiri.' "
+        #         "Hari Kamis menjawab pertanyaan 'bagaimana caranya' dengan metafora getah — "
+        #         "Roh Kudus adalah getah yang mengalir dari pokok anggur (Yesus) ke ranting (kita) "
+        #         "dan memungkinkan pertumbuhan terjadi. "
+        #         "Jadi tinggal (hari Rabu) adalah keputusan sadar kita, "
+        #         "sedangkan Roh Kudus (hari Kamis) adalah kuasa yang memungkinkan tinggal itu terjadi secara nyata."
+        #     )
+        # },
+        #
+        # {
+        #     "id": "Q24",
+        #     "type": "lintas_hari",
+        #     "source_doc": "04.txt + 06.txt",
+        #     "question": "Bagaimana kasih Allah yang digambarkan dalam Yeremia 31:3 (hari Selasa) berhubungan dengan motivasi untuk meminta Roh Kudus (hari Kamis)?",
+        #     "reference": (
+        #         "Yeremia 31:3 di hari Selasa menyatakan bahwa Allah mengasihi kita dengan kasih yang kekal "
+        #         "dan Dialah yang terlebih dahulu mengambil langkah mendekati kita. "
+        #         "Ini menjadi motivasi utama untuk meminta Roh Kudus di hari Kamis — "
+        #         "kita meminta bukan karena kewajiban, "
+        #         "melainkan karena merespons kasih Allah yang lebih dulu dinyatakan. "
+        #         "Hari Kamis juga menegaskan bahwa tanggapan kita selalu merupakan reaksi atas apa yang Allah lakukan lebih dulu, "
+        #         "yang konsisten dengan kasih kekal yang diungkap di hari Selasa."
+        #     )
+        # },
+
+        {
+            "id": "Q25",
+            "type": "lintas_hari",
+            "source_doc": "01.txt + 07.txt",
+            "question": "Bagaimana kesimpulan pelajaran hari Jumat menjawab pertanyaan pembuka pelajaran hari Sabtu tentang hubungan dengan Allah?",
+            "reference": (
+                "Hari Sabtu membuka pelajaran dengan pertanyaan reflektif: "
+                "'Bagaimana Anda menggambarkan hubungan Anda dengan Allah saat ini?' "
+                "dan mendorong kita untuk melakukan cek realitas yang jujur. "
+                "Hari Jumat menjawab lingkaran pertanyaan ini dengan menyimpulkan bahwa "
+                "setelah kita jujur tentang kondisi kita (suam-suam kuku / Laodikia), "
+                "solusinya adalah tinggal di dalam Yesus — menerima Roh-Nya setiap hari "
+                "dan membiarkan kehidupan pokok anggur menyatu dengan ranting kita. "
+                "Ini membentuk alur lengkap: cek realitas (Sabtu) → solusi (Jumat)."
+            )
+        },
+    ]
     for item in question_dataset:
         print(f"\n--- Menguji Pertanyaan: {item['id']} ---")
         for mode in modes:
@@ -239,6 +478,8 @@ async def run_evaluation():
             latency = time.time() - start_time
             save_experiment({
                 "user_input": item["question"],
+                "type": item["type"],
+                "source_doc": item["source_doc"],
                 "retrieved_contexts": retrieved_contexts,
                 "response": response_text,
                 "reference": item["reference"],
@@ -262,3 +503,4 @@ if __name__ == "__main__":
         print("API Key belum diset di Environment!")
     else:
         asyncio.run(run_evaluation())
+
