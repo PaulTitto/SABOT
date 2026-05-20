@@ -1,0 +1,2 @@
+timestamp,strategy,week,llm_model,llm_developer,files_count,llm_p_tokens,llm_c_tokens,emb_p_tokens,cost_llm,cost_emb,total_cost,latency,entity,relation,call_count
+2026-05-20T12:44:59.597078,BATCH MERGE | 2 weeks | SUCCESS,All 2 Weeks,gemini,Google,2,121092,38323,32518,0.0274384,0.0048777,0.0323161,166.848,352,286,25

@@ -4,6 +4,9 @@ import sys
 from datetime import datetime
 from utils.download_and_save_data import download_and_save_data
 
+import os
+import glob
+
 
 def fetch_quarterly_theme(tahun: int, kuartal: int) -> str:
     """
@@ -45,7 +48,7 @@ def main():
     """Main function to download and save lesson data."""
     TAHUN = 2026
     KUARTAL = 2
-    MINGGU_MAX = 1
+    MINGGU_MAX = 2
 
     print("=" * 60)
     print(f"Download Sabbath School Lessons")
@@ -91,5 +94,65 @@ def main():
     print("=" * 60)
 
 
+
+def merge_weekly_txt_dataset():
+    # Folder sesuai gambar kamu
+    source_root = "./data"
+    target_root = "./data-merge"
+
+    if not os.path.exists(source_root):
+        print(f"❌ Folder sumber '{source_root}' tidak ditemukan!")
+        return
+
+    print("=" * 60)
+    print("Mulai Merging Dataset Txt...")
+    print("=" * 60)
+
+    pattern = os.path.join(source_root, "*", "*", "*")
+    folder_minggu_list = sorted(glob.glob(pattern))
+
+    for path_minggu in folder_minggu_list:
+        if not os.path.isdir(path_minggu):
+            continue
+
+        parts = path_minggu.replace("\\", "/").split("/")
+
+        nama_minggu = parts[-1]
+        kuartal = parts[-2]
+        tahun = parts[-3]
+
+        file_hari = sorted(glob.glob(os.path.join(path_minggu, "*.txt")))
+
+        if not file_hari:
+            continue
+
+        print(f"-> Memproses {tahun}/{kuartal}/{nama_minggu} ({len(file_hari)} hari)...")
+
+        merged_text = []
+        for file_path in file_hari:
+            try:
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    content = f.read()
+                    merged_text.append(content)
+            except Exception as e:
+                print(f"   ❌ Gagal membaca {os.path.basename(file_path)}: {e}")
+
+        if merged_text:
+            target_dir = os.path.join(target_root, tahun, kuartal)
+            os.makedirs(target_dir, exist_ok=True)
+
+            output_file = os.path.join(target_dir, f"week-{nama_minggu}.txt")
+
+            with open(output_file, 'w', encoding='utf-8') as f:
+                f.write("\n\n" + "=" * 40 + "\n\n".join(merged_text))
+
+            print(f"   ✅ Berhasil merge -> {output_file}")
+
+    print("=" * 60)
+    print("Proses merge selesai!")
+    print("=" * 60)
+
+
 if __name__ == "__main__":
     main()
+    merge_weekly_txt_dataset()

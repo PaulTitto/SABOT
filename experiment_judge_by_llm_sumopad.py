@@ -15,7 +15,7 @@ from core.embedding import gemini_embedding_func
 
 
 def save_experiment(data):
-    file_path = "new_evaluation_results.csv"
+    file_path = "docsss/new_evaluation_results.csv"
     df = pd.DataFrame([data])
     if not os.path.isfile(file_path):
         df.to_csv(file_path, index=False)

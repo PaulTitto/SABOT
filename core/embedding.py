@@ -49,3 +49,4 @@ async def gemini_embedding_func(texts: list[str], **kwargs) -> np.ndarray:
         embedding_dim=1536,
         token_tracker=None,
     )
+
