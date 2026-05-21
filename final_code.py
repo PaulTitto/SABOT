@@ -16,7 +16,7 @@ from helper.calculate_cost import get_cost_by_model
 from helper.chunk_graph_stats import count_graph_stats
 
 BASE_DATA_DIR = "data-merge/2026/02"
-WORKING_DIR = "../final_working_dir"
+WORKING_DIR = "../final_working_dir_second"
 EXPERIMENT_CSV = "experiment_results_final_code.csv"
 model_key = "gemini"
 
@@ -189,8 +189,114 @@ async def experiment_merge_batch() -> Dict:
 
     return metrics
 
+async def experiment_separate_sequential() -> Dict:
+    print(f"\n{'=' * 60}")
+    print(f"  STRATEGI SEPARATE SEQUENTIAL — Gemini")
+    print(f"  Working dir : {WORKING_DIR}")
+    print(f"{'=' * 60}")
 
+    cleanup_dir(WORKING_DIR)
+
+    llm_tracker = TokenTracker()
+
+    rag = LightRAG(
+        working_dir=WORKING_DIR,
+        llm_model_func=gemini_llm_model_func,
+        embedding_func=gemini_embedding_func,
+        enable_llm_cache=True,
+        llm_model_kwargs={"token_tracker": llm_tracker},
+        llm_model_max_async=1,
+        # embedding_func_max_async=2,
+    )
+    await rag.initialize_storages()
+
+    try:
+        weekly_files = get_merged_weekly_files(BASE_DATA_DIR)
+    except FileNotFoundError as e:
+        print(f"Status ERROR: {e}")
+        await rag.finalize_storages()
+        return {}
+
+    totals = {
+        "llm_p": 0, "llm_c": 0, "emb_p": 0,
+        "c_llm": 0.0, "c_emb": 0.0, "total": 0.0,
+        "latency": 0.0, "call_count": 0,
+    }
+
+    for i, filepath in enumerate(weekly_files, start=1):
+        content = read_file(str(filepath)).strip()
+        if not content:
+            continue
+
+        doc_id = extract_doc_id(content)
+        final_id = doc_id if doc_id and doc_id != "UNKNOWN" else filepath.stem
+
+        llm_tracker.reset()
+        embed_tracker.reset()
+        start = time.time()
+
+        await rag.ainsert(content)
+
+        latency = time.time() - start
+
+        metrics = get_cost_by_model(
+            model_key,
+            llm_tracker.get_usage(),
+            embed_tracker.get_usage(),
+        )
+
+        graph = count_graph_stats(WORKING_DIR)
+
+        print(
+            f"  [{i}/{len(weekly_files)}] ID: {final_id:20} | "
+            f"Cost: ${metrics['total']:>10.6f} | "
+            f"LLM: {metrics['llm_p']:>6,}p {metrics['llm_c']:>5,}c | "
+            f"Emb: {metrics['emb_p']:>6,} | "
+            f"Calls: {llm_tracker.get_usage().get('call_count', 0):>3} | "
+            f"{latency:>6.2f}s | "
+            f"E:{graph['entities']} R:{graph['relations']}"
+        )
+
+        save_experiment({
+            "timestamp":     datetime.now().isoformat(),
+            "strategy":      f"SEPARATE MANUAL LOOP | {final_id:20} [{i}/{len(weekly_files)}]",
+            "week":          f"Week {final_id}",
+            "llm_model":     "gemini",
+            "llm_developer": "Google",
+            "files_count":   1,
+            "llm_p_tokens":  metrics["llm_p"],
+            "llm_c_tokens":  metrics["llm_c"],
+            "emb_p_tokens":  metrics["emb_p"],
+            "cost_llm":      metrics["c_llm"],
+            "cost_emb":      metrics["c_emb"],
+            "total_cost":    metrics["total"],
+            "latency":       round(latency, 3),
+            "entity":        graph["entities"],
+            "relation":      graph["relations"],
+            "call_count":    llm_tracker.get_usage().get("call_count", 0),
+        })
+
+        for key in ("llm_p", "llm_c", "emb_p", "c_llm", "c_emb", "total"):
+            totals[key] += metrics[key]
+        totals["latency"]    += latency
+        totals["call_count"] += llm_tracker.get_usage().get("call_count", 0)
+
+        await asyncio.sleep(3.0)
+
+    await rag.finalize_storages()
+
+    print(f"\n TOTAL SEPARATE SEQUENTIAL (Gemini):")
+    print(f"     Prompt Tokens    : {totals['llm_p']:,}")
+    print(f"     Completion Tokens: {totals['llm_c']:,}")
+    print(f"     Embed Tokens     : {totals['emb_p']:,}")
+    print(f"     Cost LLM         : ${totals['c_llm']:.6f}")
+    print(f"     Cost Embed       : ${totals['c_emb']:.6f}")
+    print(f"     Total Cost       : ${totals['total']:.6f}")
+    print(f"     Total Latency    : {totals['latency']:.2f}s")
+    print(f"     Call Count       : {totals['call_count']}")
+
+    return totals
 if __name__ == "__main__":
     import asyncio
 
-    asyncio.run(experiment_merge_batch())
+    asyncio.run(experiment_separate_sequential())

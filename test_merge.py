@@ -7,7 +7,8 @@ from core.embedding import gemini_embedding_func, embed_tracker
 from core.gemini import gemini_llm_model_func
 from helper.calculate_cost import get_cost_by_model
 
-working_dir = "../exp_merge_gemini_third"
+# working_dir = "../exp_merge_gemini_third"
+working_dir = "../final_working_dir_second"
 llm_tracker = TokenTracker()
 
 
@@ -25,13 +26,15 @@ async def test_query_merge():
     llm_tracker.reset()
     embed_tracker.reset()
 
-    query_text = "Pelajaran Apa aja yang ada di minggu pertama?"
-
+    query_text = "Judul Pelajaran Harian apa aja yang ada di minggu pertama"
     start = time.time()
 
     response = await rag.aquery(
         query_text,
-        param=QueryParam(mode="hybrid")
+        param=QueryParam(
+            mode="global",
+            user_prompt="Anda adalah asisten Sekolah Sabat. Jawab berdasarkan fakta database secara singkat."
+        ),
     )
 
     latency = time.time() - start

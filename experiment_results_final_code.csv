@@ -1,2 +1,4 @@
 timestamp,strategy,week,llm_model,llm_developer,files_count,llm_p_tokens,llm_c_tokens,emb_p_tokens,cost_llm,cost_emb,total_cost,latency,entity,relation,call_count
 2026-05-20T12:44:59.597078,BATCH MERGE | 2 weeks | SUCCESS,All 2 Weeks,gemini,Google,2,121092,38323,32518,0.0274384,0.0048777,0.0323161,166.848,352,286,25
+2026-05-21T08:06:02.521175,SEPARATE MANUAL LOOP | 2026-q2-w01-d1       [1/2],Week 2026-q2-w01-d1,gemini,Google,1,56472,19673,15889,0.013516400000000001,0.00238335,0.01589975,150.898,168,148,10
+2026-05-21T08:08:48.122595,SEPARATE MANUAL LOOP | 2026-q2-w02-d1       [2/2],Week 2026-q2-w02-d1,gemini,Google,1,67468,24395,16969,0.0165048,0.00254535,0.019050150000000002,162.538,322,298,14
