@@ -132,13 +132,62 @@ question_dataset = [
 #       "question": "Hubungkan analisis 'Kondisi Kita' pada hari Minggu dengan 'Teguran dan Pertobatan' pada hari Senin di minggu pertama. Mengapa urutan ini penting?",
 #       "reference": "Hari Minggu mendiagnosis kondisi rohani kita yang suam-suam kuku, mati rasa, dan merasa cukup padahal melarat. Kondisi riil ini menjadi landasan bagi hari Senin, di mana Yesus menyampaikan teguran keras. Urutan ini penting karena manusia tidak akan pernah bisa bertobat kecuali mereka terlebih dahulu disadarkan secara jujur bahwa ada sesuatu yang salah dalam kondisi rohani mereka. Teguran Yesus di hari Senin muncul sebagai bentuk penawaran solusi karena kasih-Nya yang mendalam terhadap kondisi buruk di hari Minggu."
 #     },
-    {
-      "id": "Q13",
+#     {
+#       "id": "Q13",
+#       "type": "lintas_hari",
+#       "source_doc": "week-01.txt — Rabu & Kamis",
+#       "question": "Bagaimana instruksi untuk 'Tinggal di dalam Yesus' (hari Rabu) diselesaikan masalah eksekusinya melalui doktrin 'Roh Kudus sebagai Getah' (hari Kamis)?",
+#       "reference": "Hari Rabu memerintahkan manusia untuk tinggal di dalam Yesus agar bisa menghasilkan buah rohani, namun teks juga menegaskan batasan manusia: 'Kita tidak bisa membuat buah itu tumbuh dengan usaha sendiri'. Kebingungan eksekusi ini dijawab pada hari Kamis, yang menyatakan bahwa manusia secara natur tidak bisa memaksa dirinya menempel pada Pokok Anggur. Solusinya adalah Roh Kudus yang bertindak sebagai 'getah' kehidupan; ketika manusia membuat keputusan sadar meluangkan waktu bersama Allah dan meminta Roh-Nya, Roh Kudus lah yang mengalirkan kuasa, menghidupkan kembali, dan membawa pertumbuhan nyata."
+#     },
+{
+      "id": "Q14",
       "type": "lintas_hari",
-      "source_doc": "week-01.txt — Rabu & Kamis",
-      "question": "Bagaimana instruksi untuk 'Tinggal di dalam Yesus' (hari Rabu) diselesaikan masalah eksekusinya melalui doktrin 'Roh Kudus sebagai Getah' (hari Kamis)?",
-      "reference": "Hari Rabu memerintahkan manusia untuk tinggal di dalam Yesus agar bisa menghasilkan buah rohani, namun teks juga menegaskan batasan manusia: 'Kita tidak bisa membuat buah itu tumbuh dengan usaha sendiri'. Kebingungan eksekusi ini dijawab pada hari Kamis, yang menyatakan bahwa manusia secara natur tidak bisa memaksa dirinya menempel pada Pokok Anggur. Solusinya adalah Roh Kudus yang bertindak sebagai 'getah' kehidupan; ketika manusia membuat keputusan sadar meluangkan waktu bersama Allah dan meminta Roh-Nya, Roh Kudus lah yang mengalirkan kuasa, menghidupkan kembali, dan membawa pertumbuhan nyata."
+      "source_doc": "week-01.txt — Sabtu & Jumat",
+      "question": "Bagaimana kesimpulan ringkasan pada hari Jumat menutup rangkaian pertanyaan reflektif yang diajukan pada awal pelajaran hari Sabtu di minggu pertama?",
+      "reference": "Hari Sabtu membuka pekan dengan rentetan pertanyaan reflektif yang tajam mengenai kualitas hubungan individu dengan Allah, apakah melemah, suam-suam kuku, atau jarang menyapa-Nya. Hari Jumat menutup lingkaran diskusi ini dengan memberikan konklusi final (ringkasan): bahwa setelah manusia melakukan cek realitas yang jujur terhadap kondisi Laodikia atau ketidakberbuaan mereka, solusi mutlak yang Yesus tawarkan adalah 'tinggal di dalam Dia' secara total dengan berserah pada pekerjaan Roh Kudus setiap hari."
     },
+# {
+#       "id": "Q15",
+#       "type": "lintas_minggu",
+#       "source_doc": "week-01.txt & week-02.txt (Seluruh Dokumen)",
+#       "question": "Sintesiskan bagaimana tema triwulan 'Bertumbuh Dalam Hubungan Dengan Tuhan' diartikulasikan secara terstruktur melalui sub-tema Week 1 dan Week 2!",
+#       "reference": "Tema besar 'Bertumbuh Dalam Hubungan Dengan Tuhan' diartikulasikan secara bertahap. Pekan Pertama ('Cek Realitas') berfokus pada evaluasi internal individu untuk membongkar keapatisan rohani (Laodikia), memberikan kesadaran akan kelemahan diri, serta menawarkan fondasi praktis untuk terhubung, yaitu 'tinggal' di dalam Kristus melalui kuasa Roh Kudus. Pekan Kedua ('Mengenal Allah') bergerak maju ke aspek eksternal objektif dengan membangun dasar teologis hubungan tersebut, yaitu pemulihan pemahaman karakter Allah (Kudus, Kasih, Transenden sekaligus Intim) yang sempat dirusak Iblis. Sintesisnya: Week 1 membersihkan saluran hubungan dari kesombongan manusia, dan Week 2 mengisi saluran tersebut dengan pengenalan yang memikat tentang siapa Allah yang kita sembah."
+#     },
+# {
+#       "id": "Q16",
+#       "type": "lintas_hari",
+#       "source_doc": "week-02.txt — Minggu & Selasa",
+#       "question": "Bandingkan tuduhan salah Lucifer tentang karakter Allah (hari Minggu) dengan bukti konkret kasih radikal Allah melalui Salib (hari Selasa) pada minggu kedua!",
+#       "reference": "Pada hari Minggu, Lucifer menuduh bahwa Allah memiliki motif egois, menyembunyikan sesuatu yang baik, dan tidak bisa dipercayai. Tuduhan palsu ini dipatahkan sepenuhnya oleh fakta di hari Selasa, yang menunjukkan bahwa esensi tertinggi kasih Allah (hesed) diwujudkan tanpa pamrih melalui pengorbanan ekstrem: mengutus Anak-Nya sendiri, Yesus Kristus, untuk menempuh kematian pengganti demi menyelamatkan manusia yang berdosa dan menjembatani jurang pemisah."
+#     },
+# {
+#       "id": "Q17",
+#       "type": "lintas_hari",
+#       "source_doc": "week-02.txt — Rabu & Kamis",
+#       "question": "Bagaimana dualitas sifat Allah 'Elohim dan Yahwe' (hari Rabu) terefleksi secara nyata dalam pribadi Yesus Kristus yang digambarkan pada hari Kamis?",
+#       "reference": "Hari Rabu menjelaskan transendensi 'Elohim' yang mahakuasa atas semesta dan imanensi 'Yahwe' yang sangat dekat menghembuskan nafas ke manusia. Dualitas ini mewujud sempurna dalam pribadi Yesus pada hari Kamis, di mana Yesus di satu sisi adalah Anak Allah yang berinkarnasi, memegang kuasa ilahi, menyatakan Bapa secara sempurna (representasi Elohim); dan di sisi lain memiliki kemanusiaan yang sempurna, penuh perasaan, belas kasih, aktif melayani, dan berjanji menyertai manusia senantiasa sampai akhir zaman (representasi Yahwe)."
+#     },
+# {
+#       "id": "Q18",
+#       "type": "lintas_minggu",
+#       "source_doc": "week-01.txt (Rabu) & week-02.txt (Selasa)",
+#       "question": "Analisis bagaimana konsep 'Menuruti Perintah Allah' sebagai buah dari tinggal di dalam Yesus (Week 1) berkaitan erat dengan penolakan terhadap tuduhan Iblis mengenai hukum Allah (Week 2)!",
+#       "reference": "Pada Week 2 (Selasa), dijelaskan bahwa Iblis sejak awal bertujuan salah mengartikan tabiat Allah dan membangkitkan pemberontakan melawan hukum-Nya seolah-olah hukum itu mengekang. Namun, pada Week 1 (Rabu) dijelaskan bahwa ketika manusia 'tinggal di dalam Yesus', kepatuhan atau menuruti perintah-perintah-Nya akan mengalir secara alami sebagai buah kasih. Menuruti perintah-Nya bukanlah beban yang berat, melainkan pantulan dari karakter Allah yang indah dan penuh kasih tanpa pamrih, sekaligus mematahkan kebohongan Iblis."
+#     },
+# {
+#       "id": "Q19",
+#       "type": "lintas_minggu",
+#       "source_doc": "week-01.txt (Minggu) & week-02.txt (Sabtu)",
+#       "question": "Mengapa pemulihan gambaran karakter Allah yang benar (Week 2) menjadi prasyarat mutlak untuk menyembuhkan kondisi jemaat yang 'suam-suam kuku' (Week 1)?",
+#       "reference": "Jemaat yang suam-suam kuku pada Week 1 terjebak dalam keapatisan karena merasa tidak membutuhkan apa-apa dan pelit meluangkan waktu dengan Tuhan. Kondisi ini berakar dari masalah yang diurai pada Week 2, yaitu hilangnya pengetahuan yang benar mengenai tabiat Allah akibat disalahartikan di dunia. Pemahaman yang jelas tentang kebaikan, kekudusan, dan kasih Allah pada Week 2 menjadi prasyarat mutlak karena 'semakin kita mengenal Allah, semakin kita akan mengasihi-Nya dan merindukan hubungan yang erat dan tetap dengan-Nya', yang secara otomatis menghancurkan keapatisan Laodikia."
+#     },
+    # {
+    #   "id": "Q20",
+    #   "type": "lintas_minggu",
+    #   "source_doc": "week-01.txt (Senin) & week-02.txt (Kamis)",
+    #   "question": "Hubungkan metafora Yesus 'makan bersama' manusia (Week 1, Senin) dengan nama khusus 'Imanuel' (Week 2, Kamis) dalam mendefinisikan sifat relasional Allah!",
+    #   "reference": "Metafora pada Week 1 menggambarkan kerinduan Yesus untuk duduk bersama, makan, dan melakukan pembicaraan hangat yang melambangkan hubungan sangat dekat, intim, dan terbuka. Sifat relasional yang radikal ini divalidasi secara teologis pada Week 2 melalui nama khusus Yesus, yaitu 'Imanuel', yang berarti 'Allah beserta kita'. Baik tindakan mengetuk pintu untuk makan bersama maupun gelar Imanuel membuktikan satu kebenaran linier: bahwa sejak awal Allah menolak jarak dan selalu rindu untuk hadir secara riil di tengah-tengah kehidupan manusia."
+    # },
 ]
 
 
@@ -223,9 +272,9 @@ async def score_sample(question, answer, contexts, reference):
 
 
 async def run_eval_comprehensive(strategy_name, working_dir, target_llm_name, target_llm_func):
-    modes = ["hybrid", "local", "global", "naive", "mix"]
+    # modes = ["hybrid", "local", "global", "naive", "mix"]
     # modes = ["local", "global", "hybrid", "mix"]
-    # modes = ["hybrid"]
+    modes = ["naive"]
     all_mode_dfs = []
 
     for current_mode in modes:
@@ -288,9 +337,9 @@ async def main():
         from core.openai import openai_llm
 
         llm_targets = [
-            # {"name": "Gemini-2.5-Flash-Lite", "func": gemini_llm_model_func},
-            {"name": "DeepSeek-V4-Flash",      "func": deepseek_llm},
-            {"name": "GPT-4.1-Mini",            "func": openai_llm},
+            {"name": "Gemini-2.5-Flash-Lite", "func": gemini_llm_model_func},
+            # {"name": "DeepSeek-V4-Flash",      "func": deepseek_llm},
+            # {"name": "GPT-4.1-Mini",            "func": openai_llm},
         ]
 
         reports = []
