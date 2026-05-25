@@ -3,6 +3,7 @@ import asyncio
 from lightrag import LightRAG, QueryParam
 from lightrag.utils import TokenTracker
 
+from core.deepseek import deepseek_llm
 from core.embedding import gemini_embedding_func, embed_tracker
 from core.gemini import gemini_llm_model_func
 from helper.calculate_cost import get_cost_by_model
@@ -15,7 +16,8 @@ llm_tracker = TokenTracker()
 async def test_query_merge():
     rag = LightRAG(
         working_dir=working_dir,
-        llm_model_func=gemini_llm_model_func,
+        # llm_model_func=gemini_llm_model_func,
+        llm_model_func=deepseek_llm,
         embedding_func=gemini_embedding_func,
         enable_llm_cache=True,
         llm_model_kwargs={"token_tracker": llm_tracker},
@@ -32,7 +34,7 @@ async def test_query_merge():
     response = await rag.aquery(
         query_text,
         param=QueryParam(
-            mode="global",
+            mode="mix",
             user_prompt="Anda adalah asisten Sekolah Sabat. Jawab berdasarkan fakta database secara singkat."
         ),
     )

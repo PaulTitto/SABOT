@@ -11,7 +11,7 @@ load_dotenv()
 
 llm_tracker = TokenTracker()
 
-WORKING_DIR = "deep_seek_rag_storage"
+WORKING_DIR = "../final_working_dir_second"
 os.makedirs(WORKING_DIR, exist_ok=True)
 
 
