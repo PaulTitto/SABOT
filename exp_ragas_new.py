@@ -337,8 +337,8 @@ async def main():
         from core.openai import openai_llm
 
         llm_targets = [
-            {"name": "Gemini-2.5-Flash-Lite", "func": gemini_llm_model_func},
-            # {"name": "DeepSeek-V4-Flash",      "func": deepseek_llm},
+            # {"name": "Gemini-2.5-Flash-Lite", "func": gemini_llm_model_func},
+            {"name": "DeepSeek-V4-Flash",      "func": deepseek_llm},
             # {"name": "GPT-4.1-Mini",            "func": openai_llm},
         ]
 

@@ -17,7 +17,7 @@ MODEL_JUDGE = "gemini-2.5-pro"
 
 
 def save_experiment(data):
-    file_path = "11-new_evaluation_results.csv"
+    file_path = "../11-new_evaluation_results.csv"
     df = pd.DataFrame([data])
     if not os.path.isfile(file_path):
         df.to_csv(file_path, index=False)
@@ -69,7 +69,7 @@ async def llm_model_func(prompt, system_prompt=None, history_messages=[], **kwar
 
 
 async def run_evaluation():
-    working_dir = "../exp_merge_gemini_third"
+    working_dir = "../../exp_merge_gemini_third"
     api_key = os.getenv("GEMINI_API_KEY")
     client = genai.Client(api_key=api_key)
 

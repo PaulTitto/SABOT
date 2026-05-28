@@ -39,22 +39,22 @@ SCHOOL_FILES = [
     "./data/2026/02/01/07.txt",
 ]
 LLM_CONFIGS = {
-    "gemini-2.5-flash-lite": {
-        "name": "Gemini 2.5 Flash-Lite",
-        "developer": "Google",
-        "context_window": 1048576,
-        "input_cost_per_million": 0.10,
-        "output_cost_per_million": 0.40,
-        "cost_func": get_gemini_detailed_costs,
-    },
-    # "deepseek-v4-flash": {
-    #     "name": "DeepSeek V4 Flash",
-    #     "developer": "DeepSeek AI",
-    #     "context_window": 1000000,
-    #     "input_cost_per_million": 0.14,
-    #     "output_cost_per_million": 0.28,
-    #     "cost_func": get_deepseek_detailed_costs,
+    # "gemini-2.5-flash-lite": {
+    #     "name": "Gemini 2.5 Flash-Lite",
+    #     "developer": "Google",
+    #     "context_window": 1048576,
+    #     "input_cost_per_million": 0.10,
+    #     "output_cost_per_million": 0.40,
+    #     "cost_func": get_gemini_detailed_costs,
     # },
+    "deepseek-v4-flash": {
+        "name": "DeepSeek V4 Flash",
+        "developer": "DeepSeek AI",
+        "context_window": 1000000,
+        "input_cost_per_million": 0.14,
+        "output_cost_per_million": 0.28,
+        "cost_func": get_deepseek_detailed_costs,
+    },
     # "gpt-4.1-mini": {
     #     "name": "GPT-4.1 Mini",
     #     "developer": "OpenAI",
@@ -67,14 +67,14 @@ LLM_CONFIGS = {
 
 
 WORKING_DIRS = {
-    ("separate", "gemini-2.5-flash-lite"): "../exp_separate_gemini_third",
-    # ("separate", "deepseek-v4-flash"):      "../exp_separate_deepseek_second",
+    # ("separate", "gemini-2.5-flash-lite"): "../exp_separate_gemini_third",
+    ("separate", "deepseek-v4-flash"):      "../exp_separate_deepseek-v4_first",
     # ("separate", "gpt-4.1-mini"):           "../exp_separate_gpt4_second",
-    ("merge",    "gemini-2.5-flash-lite"):  "../exp_merge_gemini_third",
-    # ("merge",    "deepseek-v4-flash"):      "../exp_merge_deepseek_second",
+    # ("merge",    "gemini-2.5-flash-lite"):  "../exp_merge_gemini_third",
+    ("merge",    "deepseek-v4-flash"):      "../exp_merge_deepseek-v4_first",
     # ("merge",    "gpt-4.1-mini"):           "../exp_merge_gpt4_second",
-    ("batch",    "gemini-2.5-flash-lite"):  "../exp_batch_gemini_third",
-    # ("batch",    "deepseek-v4-flash"):      "../exp_batch_deepseek_second",
+    # ("batch",    "gemini-2.5-flash-lite"):  "../exp_batch_gemini_third",
+    ("batch",    "deepseek-v4-flash"):      "../exp_batch_deepseek-v4_first",
     # ("batch",    "gpt-4.1-mini"):           "../exp_batch_gpt4_second",
 }
 
@@ -519,6 +519,6 @@ if __name__ == "__main__":
     validate_env()
     configure_logging()
     for model_key in LLM_CONFIGS:
-        asyncio.run(experiment_separate(model_key))
+        # asyncio.run(experiment_separate(model_key))
         # asyncio.run(experiment_merge(model_key))
-        # asyncio.run(experiment_batch(model_key))
+        asyncio.run(experiment_batch(model_key))

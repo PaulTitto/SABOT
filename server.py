@@ -1,27 +1,64 @@
 import inspect
 import os.path
 from contextlib import asynccontextmanager
-
 import uvicorn
-from dotenv import load_dotenv
 from fastapi import FastAPI
 from lightrag import QueryParam
 from openai import BaseModel
 from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import StreamingResponse
 from starlette.staticfiles import StaticFiles
-
-from core.deepseek import init_deepseek_lightRAG
-from core.embedding import embed_tracker
-from core.gemini import init_gemini_lightRAG, llm_tracker
 from helper.date_helper import (
     extract_date_from_question,
     get_today_iso
 )
+import os
+import json
+from dotenv import load_dotenv
+from lightrag import LightRAG
+from lightrag.llm.openai import openai_complete_if_cache
+from lightrag.utils import TokenTracker
+
+from core.embedding import gemini_embedding_func
+
+load_dotenv()
+
+llm_tracker = TokenTracker()
+
+WORKING_DIR = "../final_working_dir_second"
+WORKING_DIR = "/www/wwwroot/satulima.web.id/final_working_dir_second"
+os.makedirs(WORKING_DIR, exist_ok=True)
+
+
 
 load_dotenv()
 
 rag = None
+
+async def deepseek_llm(
+    prompt, system_prompt=None, history_messages=[], keyword_extraction=False, **kwargs
+) -> str:
+    return await openai_complete_if_cache(
+        os.getenv("LLM_MODEL", "deepseek-chat"),
+        # os.getenv("LLM_MODEL", "deepseek-v4-flash"),
+        prompt,
+        system_prompt=system_prompt,
+        history_messages=history_messages,
+        api_key=os.getenv("DEEPSEEK_API_KEY"),
+        base_url=os.getenv("DEEPSEEK_BASE_URL"),
+        **kwargs,
+    )
+
+async def init_deepseek_lightRAG():
+    rag = LightRAG(
+        working_dir=WORKING_DIR,
+        llm_model_func=deepseek_llm,
+        embedding_func=gemini_embedding_func,
+        enable_llm_cache=True,
+        llm_model_kwargs={"token_tracker": llm_tracker},
+    )
+    await rag.initialize_storages()
+    return rag
 
 
 @asynccontextmanager
@@ -32,7 +69,6 @@ async def lifespan(ap: FastAPI):
     print("Starting Initialize LightRAG")
 
     try:
-        # rag = await init_gemini_lightRAG()
         rag = await init_deepseek_lightRAG()
 
         print("LightRAG Initialized")
@@ -91,8 +127,8 @@ async def ask(req: AskRequest):
         param = QueryParam(
             mode="mix",
             stream=True,
-
             user_prompt=(
+                "Langsung to the point"
                 "Anda adalah AI Reading Assistant "
                 "untuk pelajaran Sekolah Sabat. "
 
@@ -132,8 +168,8 @@ async def ask(req: AskRequest):
         # )
         )
 
-        llm_tracker.reset()
-        embed_tracker.reset()
+        # llm_tracker.reset()
+        # embed_tracker.reset()
 
         try:
 

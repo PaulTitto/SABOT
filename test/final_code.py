@@ -15,8 +15,8 @@ from core.gemini import gemini_llm_model_func
 from helper.calculate_cost import get_cost_by_model
 from helper.chunk_graph_stats import count_graph_stats
 
-BASE_DATA_DIR = "data-merge/2026/02"
-WORKING_DIR = "../final_working_dir_second"
+BASE_DATA_DIR = "../data-merge/2026/02"
+WORKING_DIR = "../../final_working_dir_second"
 EXPERIMENT_CSV = "experiment_results_final_code.csv"
 model_key = "gemini"
 

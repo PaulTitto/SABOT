@@ -15,7 +15,7 @@ from core.embedding import gemini_embedding_func
 
 
 def save_experiment(data):
-    file_path = "docsss/new_evaluation_results.csv"
+    file_path = "../docsss/new_evaluation_results.csv"
     df = pd.DataFrame([data])
     if not os.path.isfile(file_path):
         df.to_csv(file_path, index=False)
@@ -109,7 +109,7 @@ async def embedding_func(texts: list[str]) -> np.ndarray:
 
 
 async def run_evaluation():
-    working_dir = "../exp_merge_gemini_third"
+    working_dir = "../../exp_merge_gemini_third"
 
     # Initialize SumoPod client untuk judging
     judge_client = OpenAI(

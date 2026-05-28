@@ -21,7 +21,8 @@ async def deepseek_llm(
     prompt, system_prompt=None, history_messages=[], keyword_extraction=False, **kwargs
 ) -> str:
     return await openai_complete_if_cache(
-        os.getenv("LLM_MODEL", "deepseek-chat"),
+        # os.getenv("LLM_MODEL", "deepseek-chat"),
+        os.getenv("LLM_MODEL", "deepseek-v4-flash"),
         prompt,
         system_prompt=system_prompt,
         history_messages=history_messages,
