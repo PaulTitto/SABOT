@@ -13,7 +13,7 @@ from lightrag.llm.openai import openai_complete_if_cache
 from lightrag.utils import TokenTracker
 
 from core.deepseek import deepseek_llm
-from core.embedding import gemini_embedding_func, embed_tracker
+from core.embedding import gemini_embedding_func, embed_tracker, openai_embedding_func
 from core.gemini import gemini_llm_model_func
 from core.openai import openai_llm
 from docs.configure_logging import configure_logging
@@ -39,22 +39,22 @@ SCHOOL_FILES = [
     "./data/2026/02/01/07.txt",
 ]
 LLM_CONFIGS = {
-    # "gemini-2.5-flash-lite": {
-    #     "name": "Gemini 2.5 Flash-Lite",
-    #     "developer": "Google",
-    #     "context_window": 1048576,
-    #     "input_cost_per_million": 0.10,
-    #     "output_cost_per_million": 0.40,
-    #     "cost_func": get_gemini_detailed_costs,
-    # },
-    "deepseek-v4-flash": {
-        "name": "DeepSeek V4 Flash",
-        "developer": "DeepSeek AI",
-        "context_window": 1000000,
-        "input_cost_per_million": 0.14,
-        "output_cost_per_million": 0.28,
-        "cost_func": get_deepseek_detailed_costs,
+    "gemini-2.5-flash-lite": {
+        "name": "Gemini 2.5 Flash-Lite",
+        "developer": "Google",
+        "context_window": 1048576,
+        "input_cost_per_million": 0.10,
+        "output_cost_per_million": 0.40,
+        "cost_func": get_gemini_detailed_costs,
     },
+    # "deepseek-v4-flash": {
+    #     "name": "DeepSeek V4 Flash",
+    #     "developer": "DeepSeek AI",
+    #     "context_window": 1000000,
+    #     "input_cost_per_million": 0.14,
+    #     "output_cost_per_million": 0.28,
+    #     "cost_func": get_deepseek_detailed_costs,
+    # },
     # "gpt-4.1-mini": {
     #     "name": "GPT-4.1 Mini",
     #     "developer": "OpenAI",
@@ -67,18 +67,18 @@ LLM_CONFIGS = {
 
 
 WORKING_DIRS = {
-    # ("separate", "gemini-2.5-flash-lite"): "../exp_separate_gemini_third",
-    ("separate", "deepseek-v4-flash"):      "../exp_separate_deepseek-v4_first",
-    # ("separate", "gpt-4.1-mini"):           "../exp_separate_gpt4_second",
-    # ("merge",    "gemini-2.5-flash-lite"):  "../exp_merge_gemini_third",
-    ("merge",    "deepseek-v4-flash"):      "../exp_merge_deepseek-v4_first",
-    # ("merge",    "gpt-4.1-mini"):           "../exp_merge_gpt4_second",
-    # ("batch",    "gemini-2.5-flash-lite"):  "../exp_batch_gemini_third",
-    ("batch",    "deepseek-v4-flash"):      "../exp_batch_deepseek-v4_first",
-    # ("batch",    "gpt-4.1-mini"):           "../exp_batch_gpt4_second",
+    ("separate", "gemini-2.5-flash-lite"): "../exp_separate_gemini_openai_embed",
+    # ("separate", "deepseek-v4-flash"):      "../exp_separate_deepseek-v4_openai_embed",
+    # ("separate", "gpt-4.1-mini"):           "../exp_separate_gpt4_openai_embed",
+    # ("merge",    "gemini-2.5-flash-lite"):  "../exp_merge_gemini_openai_embed",
+    # ("merge",    "deepseek-v4-flash"):      "../exp_merge_deepseek-v4_openai_embed",
+    # ("merge",    "gpt-4.1-mini"):           "../exp_merge_gpt4_openai_embed",
+    # ("batch",    "gemini-2.5-flash-lite"):  "../exp_batch_gemini_openai_embed",
+    # ("batch",    "deepseek-v4-flash"):      "../exp_batch_deepseek-v4_openai_embed",
+    # ("batch",    "gpt-4.1-mini"):           "../exp_batch_gpt4_openai_embed",
 }
 
-EXPERIMENT_CSV = "full_experiment_indexing_9_combinations.csv"
+EXPERIMENT_CSV = "full_experiment_indexing_9_combination_openai_embed.csv"
 
 CSV_FIELDNAMES = [
     "timestamp",
@@ -100,15 +100,17 @@ CSV_FIELDNAMES = [
 
 
 
+
 def gemini_llm_tracker_func(model: str, tracker: TokenTracker):
     async def _func(prompt, system_prompt=None, history_messages=None, **kwargs):
         kwargs.pop("token_tracker", None)
-        return await gemini_complete_if_cache(
+        return await openai_complete_if_cache(
             model, prompt,
             system_prompt=system_prompt,
             history_messages=history_messages,
             token_tracker=tracker,
-            api_key=os.getenv("GEMINI_API_KEY"),
+            api_key=os.getenv("OPENAI_API_KEY"),
+            base_url=os.getenv("OPENAI_BASE_URL"),
             **kwargs,
         )
     return _func
@@ -206,7 +208,7 @@ async def experiment_separate(model_key: str) -> Dict:
     rag = LightRAG(
         working_dir=working_dir,
         llm_model_func=llm_func,
-        embedding_func=gemini_embedding_func,
+        embedding_func=openai_embedding_func,
         enable_llm_cache=True,
         llm_model_kwargs={"token_tracker": llm_tracker},
     )
@@ -519,6 +521,6 @@ if __name__ == "__main__":
     validate_env()
     configure_logging()
     for model_key in LLM_CONFIGS:
-        # asyncio.run(experiment_separate(model_key))
+        asyncio.run(experiment_separate(model_key))
         # asyncio.run(experiment_merge(model_key))
-        asyncio.run(experiment_batch(model_key))
+        # asyncio.run(experiment_batch(model_key))

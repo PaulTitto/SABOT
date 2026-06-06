@@ -25,8 +25,7 @@ load_dotenv()
 
 llm_tracker = TokenTracker()
 
-WORKING_DIR = "../final_working_dir_second"
-WORKING_DIR = "/www/wwwroot/satulima.web.id/final_working_dir_second"
+WORKING_DIR = "/var/www/ss-chatbot/final_working_dir_second"
 os.makedirs(WORKING_DIR, exist_ok=True)
 
 
@@ -103,21 +102,18 @@ async def ask(req: AskRequest):
     async def generate():
 
         if rag is None:
-            yield "[ERROR] RAG system not initialized"
+            yield "data: [ERROR] RAG system not initialized\n\n"
             return
 
         question = req.question.strip()
 
-        date_iso = extract_date_from_question(
-            question
-        )
+        date_iso = extract_date_from_question(question)
 
         if date_iso:
             question = (
                 f"Pelajaran untuk tanggal "
                 f"{date_iso}. {question}"
             )
-
         elif "hari ini" in question.lower():
             question = (
                 f"Pelajaran untuk tanggal "
@@ -128,76 +124,49 @@ async def ask(req: AskRequest):
             mode="mix",
             stream=True,
             user_prompt=(
-                "Langsung to the point"
+                "Langsung to the point. "
                 "Anda adalah AI Reading Assistant "
                 "untuk pelajaran Sekolah Sabat. "
-
                 "Jawaban harus natural, modern, "
                 "mudah dipahami, dan tidak terlalu formal. "
-
                 "Jangan gunakan kalimat seperti: "
                 "'Berdasarkan konteks yang tersedia'. "
-
-                "Jangan gunakan heading seperti "
-                "'References'. "
-
-                "Jawaban harus terasa seperti "
-                "assistant modern seperti ChatGPT "
-                "atau ScienceDirect AI. "
-
-                "Jika user meminta ringkasan, "
-                "buat ringkasan natural dan singkat. "
-
-                "Setiap referensi dokumen HARUS "
-                "menggunakan format kurung siku. "
-
-                "Contoh: [2026-q2-w01-d1] "
-
+                "Jangan gunakan heading seperti 'References'. "
+                "Jawaban harus terasa seperti assistant modern "
+                "seperti ChatGPT atau ScienceDirect AI. "
+                "Jika user meminta ringkasan, buat ringkasan "
+                "natural dan singkat. "
+                "Setiap referensi dokumen HARUS menggunakan "
+                "format kurung siku. Contoh: [2026-q2-w01-d1]. "
                 "Jangan gunakan format DOC id:. "
-
-                "Format referensi wajib mengikuti pola: "
-                "YYYY-qX-wXX-dX."
+                "Format referensi wajib mengikuti pola: YYYY-qX-wXX-dX."
             )
-        # user_prompt = (
-        #     "Anda adalah pakar studi Sekolah Sabat. "
-        #     "Berikan jawaban yang mendalam namun ringkas. "
-        #     "Setiap poin informasi yang Anda berikan harus diikuti dengan DOC id yang relevan di dalam kurung. "
-        #     "Contoh: 'Tujuan pelajaran minggu ini adalah X (DOC id: 2026-q2-w01-d1)'. "
-        #     "menggunakan kurung siku, contoh: [2026-q2-w01-d1]."
-        #     "Pastikan format referensi selalu mengikuti pola: YYYY-qX-wXX-dX."
-        # )
         )
 
-        # llm_tracker.reset()
-        # embed_tracker.reset()
-
         try:
-
-            resp = await rag.aquery(
-                question,
-                param=param
-            )
+            resp = await rag.aquery(question, param=param)
 
             if inspect.isasyncgen(resp):
-
                 async for chunk in resp:
-                    yield chunk
-
+                    # Format SSE: setiap chunk dibungkus "data: ...\n\n"
+                    yield f"data: {chunk}\n\n"
             else:
-                yield str(resp)
+                yield f"data: {str(resp)}\n\n"
 
         except Exception as e:
+            yield f"data: [ERROR Server] {str(e)}\n\n"
 
-            yield (
-                "[ERROR Server] "
-                f"{str(e)}"
-            )
+        yield "data: [DONE]\n\n"
 
     return StreamingResponse(
         generate(),
-        media_type="text/plain; charset=utf-8"
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "X-Accel-Buffering": "no",
+            "Connection": "keep-alive",
+        }
     )
-
 
 @app.get("/health")
 async def health_check():
