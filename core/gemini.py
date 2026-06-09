@@ -3,7 +3,7 @@ from lightrag import LightRAG
 from lightrag.llm.openai import openai_complete_if_cache  # ← ganti import
 from lightrag.utils import TokenTracker
 
-from core.embedding import gemini_embedding_func, openai_embedding_func
+from core.embedding import gemini_embedding_func
 
 WORKING_DIR = "gemini_rag_storage"
 os.makedirs(WORKING_DIR, exist_ok=True)
@@ -36,7 +36,7 @@ async def init_gemini_lightRAG():
     rag = LightRAG(
         working_dir=WORKING_DIR,
         llm_model_func=gemini_llm_model_func,
-        embedding_func=openai_embedding_func,
+        embedding_func=gemini_embedding_func,
         enable_llm_cache=True,
         llm_model_kwargs={"token_tracker": llm_tracker},
     )

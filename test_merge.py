@@ -6,10 +6,9 @@ from lightrag.utils import TokenTracker
 from core.deepseek import deepseek_llm
 from core.embedding import gemini_embedding_func, embed_tracker
 from core.gemini import gemini_llm_model_func
-from helper.calculate_cost import get_cost_by_model
 
 # working_dir = "../exp_merge_gemini_third"
-working_dir = "../final_working_dir_second"
+working_dir = "../final_working_dir"
 llm_tracker = TokenTracker()
 
 
@@ -17,7 +16,7 @@ async def test_query_merge():
     rag = LightRAG(
         working_dir=working_dir,
         # llm_model_func=gemini_llm_model_func,
-        llm_model_func=deepseek_llm,
+        llm_model_func=gemini_llm_model_func,
         embedding_func=gemini_embedding_func,
         enable_llm_cache=True,
         llm_model_kwargs={"token_tracker": llm_tracker},

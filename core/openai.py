@@ -40,7 +40,7 @@ async def init_openai_lightRAG():
     rag = LightRAG(
         working_dir=WORKING_DIR,
         llm_model_func=openai_llm,
-        embedding_func=openai_embedding_func,
+        embedding_func=gemini_embedding_func,
         enable_llm_cache=True,
         llm_model_kwargs={"token_tracker": llm_tracker},
     )

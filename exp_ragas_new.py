@@ -8,18 +8,26 @@ import nest_asyncio
 import pandas as pd
 from openai import AsyncOpenAI
 from google import genai
+from ragas.embeddings.base import modern_embedding_factory
 
 from ragas.llms import InstructorLLM
-from ragas.embeddings import GoogleEmbeddings
+from ragas.embeddings import GoogleEmbeddings, LangchainEmbeddingsWrapper
 from ragas.llms.base import InstructorModelArgs
 from ragas.metrics.collections import Faithfulness, AnswerRelevancy, ContextRecall, ContextPrecision
 from instructor import Mode
 from lightrag import LightRAG, QueryParam
 from core.embedding import gemini_embedding_func
-from core.gemini import gemini_llm_model_func
+from openai import AsyncOpenAI
+
+from experiment.experiment_ragas_comparison import ragas_embeddings
 
 nest_asyncio.apply()
+import logging
 
+logging.basicConfig(level=logging.DEBUG)
+
+logging.getLogger("openai").setLevel(logging.DEBUG)
+logging.getLogger("httpx").setLevel(logging.DEBUG)
 # =====================================================================
 # INISIALISASI JUDGE & EMBEDDINGS (Ragas v0.4.3 Native Compliant)
 # =====================================================================
@@ -31,30 +39,53 @@ instructor_client = instructor.from_openai(
     ),
     mode=Mode.JSON
 )
+
 ragas_judge = InstructorLLM(
     client=instructor_client,
     model="glm-5.1",
     provider="openai",
     model_args=InstructorModelArgs(
-        max_tokens=8192,
-        temperature=0.1,
+        max_tokens=512,
+        temperature=0,
     )
 )
+# ragas_judge = InstructorLLM(
+#     client=instructor_client,
+#     model="glm-5.1",
+#     provider="openai",
+#     model_args=InstructorModelArgs(
+#         max_tokens=8192,
+#         temperature=0.1,
+#     )
+# )
+# langchain_embeddings = OpenAIEmbeddings(
+#     model="google/gemini-embedding-001",
+#     openai_api_key=os.getenv("OPENAI_API_KEY"),
+#     openai_api_base=os.getenv("OPENAI_BASE_URL"),
+# )
+#
+# ragas_embeddings = LangchainEmbeddings(embeddings=langchain_embeddings)
 
-google_client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
-ragas_embeddings = GoogleEmbeddings(
-    model="gemini-embedding-001",
-    client=google_client
+
+supamod_client = AsyncOpenAI(
+    api_key=os.getenv("OPENAI_API_KEY"),
+    base_url=os.getenv("OPENAI_BASE_URL"),
+)
+
+ragas_embeddings = modern_embedding_factory(
+    provider='openai',
+    model='gemini/gemini-embedding-001',
+    client=supamod_client,
 )
 
 question_dataset = [
-    # {
-    #   "id": "Q01",
-    #   "type": "faktual",
-    #   "source_doc": "week-01.txt — Sabtu",
-    #   "question": "Apa judul pelajaran hari Sabtu pada minggu pertama dan kutipan lengkap ayat hafalan berdasarkan teks tersebut?",
-    #   "reference": "Judul pelajaran hari Sabtu adalah Cek Realitas. Ayat hafalan minggu pertama diambil dari Yohanes 15:9 mengenai perintah untuk tinggal di dalam kasih Yesus sebagaimana Bapa mengasihi Yesus."
-    # },
+    {
+      "id": "Q01",
+      "type": "faktual",
+      "source_doc": "week-01.txt — Sabtu",
+      "question": "Apa judul pelajaran hari Sabtu pada minggu pertama dan kutipan lengkap ayat hafalan berdasarkan teks tersebut?",
+      "reference": "Judul pelajaran hari Sabtu adalah Cek Realitas. Ayat hafalan minggu pertama diambil dari Yohanes 15:9 mengenai perintah untuk tinggal di dalam kasih Yesus sebagaimana Bapa mengasihi Yesus."
+    },
     # {
     #   "id": "Q02",
     #   "type": "faktual",
@@ -139,13 +170,13 @@ question_dataset = [
 #       "question": "Bagaimana instruksi untuk 'Tinggal di dalam Yesus' (hari Rabu) diselesaikan masalah eksekusinya melalui doktrin 'Roh Kudus sebagai Getah' (hari Kamis)?",
 #       "reference": "Hari Rabu memerintahkan manusia untuk tinggal di dalam Yesus agar bisa menghasilkan buah rohani, namun teks juga menegaskan batasan manusia: 'Kita tidak bisa membuat buah itu tumbuh dengan usaha sendiri'. Kebingungan eksekusi ini dijawab pada hari Kamis, yang menyatakan bahwa manusia secara natur tidak bisa memaksa dirinya menempel pada Pokok Anggur. Solusinya adalah Roh Kudus yang bertindak sebagai 'getah' kehidupan; ketika manusia membuat keputusan sadar meluangkan waktu bersama Allah dan meminta Roh-Nya, Roh Kudus lah yang mengalirkan kuasa, menghidupkan kembali, dan membawa pertumbuhan nyata."
 #     },
-{
-      "id": "Q14",
-      "type": "lintas_hari",
-      "source_doc": "week-01.txt — Sabtu & Jumat",
-      "question": "Bagaimana kesimpulan ringkasan pada hari Jumat menutup rangkaian pertanyaan reflektif yang diajukan pada awal pelajaran hari Sabtu di minggu pertama?",
-      "reference": "Hari Sabtu membuka pekan dengan rentetan pertanyaan reflektif yang tajam mengenai kualitas hubungan individu dengan Allah, apakah melemah, suam-suam kuku, atau jarang menyapa-Nya. Hari Jumat menutup lingkaran diskusi ini dengan memberikan konklusi final (ringkasan): bahwa setelah manusia melakukan cek realitas yang jujur terhadap kondisi Laodikia atau ketidakberbuaan mereka, solusi mutlak yang Yesus tawarkan adalah 'tinggal di dalam Dia' secara total dengan berserah pada pekerjaan Roh Kudus setiap hari."
-    },
+# {
+#       "id": "Q14",
+#       "type": "lintas_hari",
+#       "source_doc": "week-01.txt — Sabtu & Jumat",
+#       "question": "Bagaimana kesimpulan ringkasan pada hari Jumat menutup rangkaian pertanyaan reflektif yang diajukan pada awal pelajaran hari Sabtu di minggu pertama?",
+#       "reference": "Hari Sabtu membuka pekan dengan rentetan pertanyaan reflektif yang tajam mengenai kualitas hubungan individu dengan Allah, apakah melemah, suam-suam kuku, atau jarang menyapa-Nya. Hari Jumat menutup lingkaran diskusi ini dengan memberikan konklusi final (ringkasan): bahwa setelah manusia melakukan cek realitas yang jujur terhadap kondisi Laodikia atau ketidakberbuaan mereka, solusi mutlak yang Yesus tawarkan adalah 'tinggal di dalam Dia' secara total dengan berserah pada pekerjaan Roh Kudus setiap hari."
+#     },
 # {
 #       "id": "Q15",
 #       "type": "lintas_minggu",
@@ -212,7 +243,14 @@ async def get_rag_data(rag, question, mode_name):
 
 async def score_sample(question, answer, contexts, reference):
     m1 = Faithfulness(llm=ragas_judge)
-    m2 = AnswerRelevancy(llm=ragas_judge, embeddings=ragas_embeddings)
+    print("Before AnswerRelevancy")
+
+    m2 = AnswerRelevancy(
+        llm=ragas_judge,
+        embeddings=ragas_embeddings
+    )
+
+    print("After AnswerRelevancy")
     m3 = ContextRecall(llm=ragas_judge)
     m4 = ContextPrecision(llm=ragas_judge)
 

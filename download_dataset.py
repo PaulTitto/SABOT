@@ -48,7 +48,7 @@ def main():
     """Main function to download and save lesson data."""
     TAHUN = 2026
     KUARTAL = 2
-    MINGGU_MAX = 2
+    MINGGU_MAX = 15
 
     print("=" * 60)
     print(f"Download Sabbath School Lessons")
@@ -154,5 +154,5 @@ def merge_weekly_txt_dataset():
 
 
 if __name__ == "__main__":
-    main()
+    # main()
     merge_weekly_txt_dataset()

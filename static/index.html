@@ -1,524 +1,177 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sekolah Sabat — Asisten Pintar</title>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <style>
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        :root {
-            --bg: #F8F5EF; --surface: #FFFFFF; --ink: #1C1A14;
-            --ink-muted: #6B6555; --ink-faint: #C8C2B0; --gold: #B8961E;
-            --border: rgba(28,26,20,0.1); --user-bg: #1C1A14; --user-text: #F8F5EF;
-            --bot-bg: #FFFFFF; --bot-border: rgba(28,26,20,0.08);
-            --radius: 16px; --radius-sm: 10px;
-            --blue: #1a73e8; --blue-light: #e8f0fe; --blue-border: #c5d8fd;
-        }
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --bg: #141210; --surface: #1E1C16; --ink: #F0EDE4;
-                --ink-muted: #9B9484; --ink-faint: #454035;
-                --user-bg: #F0EDE4; --user-text: #1C1A14;
-                --bot-bg: #1E1C16; --bot-border: rgba(240,237,228,0.06);
-                --blue-light: #1a2a3a; --blue-border: #2a4a6a;
-            }
-        }
-
-        body {
-            font-family: 'DM Sans', sans-serif;
-            background: var(--bg); color: var(--ink);
-            height: 100dvh; display: flex; flex-direction: column; overflow: hidden;
-        }
-
-        /* ── Header ── */
-        header {
-            padding: 16px 24px; display: flex; align-items: center; gap: 12px;
-            border-bottom: 0.5px solid var(--border); background: var(--surface); flex-shrink: 0;
-        }
-        .logo-mark {
-            width: 36px; height: 36px; background: var(--ink); border-radius: 10px;
-            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-        }
-        .logo-mark svg { width: 18px; height: 18px; fill: var(--bg); }
-        .header-title { font-family: 'DM Serif Display', serif; font-size: 18px; line-height: 1.2; }
-        .header-sub { font-size: 12px; color: var(--ink-muted); }
-        .status-pill {
-            margin-left: auto; display: flex; align-items: center; gap: 6px;
-            font-size: 12px; color: var(--ink-muted); background: var(--bg);
-            border: 0.5px solid var(--border); border-radius: 20px; padding: 5px 12px;
-        }
-        .status-dot { width: 7px; height: 7px; border-radius: 50%; background: #ff4d4d; transition: background 0.4s; }
-        .status-dot.ready { background: #4CAF50; }
-
-        /* ── Chat ── */
-        #chat {
-            flex: 1; overflow-y: auto; padding: 24px 0;
-            display: flex; flex-direction: column; scroll-behavior: smooth;
-        }
-        .message-wrap {
-            display: flex; flex-direction: column; align-items: flex-start;
-            padding: 8px 24px; max-width: 850px; width: 100%; margin: 0 auto;
-        }
-        .message-wrap.user { align-items: flex-end; }
-        .bubble {
-            max-width: 85%; padding: 12px 18px; border-radius: var(--radius);
-            font-size: 15px; line-height: 1.6;
-        }
-        .bubble.user {
-            background: var(--user-bg); color: var(--user-text);
-            border-bottom-right-radius: 4px;
-        }
-        .bubble.bot {
-            background: var(--bot-bg); color: var(--ink);
-            border: 0.5px solid var(--bot-border);
-            border-bottom-left-radius: 4px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
-        }
-
-        /* Markdown inside bubble */
-        .bubble.bot p { margin-bottom: 8px; }
-        .bubble.bot p:last-child { margin-bottom: 0; }
-        .bubble.bot ul, .bubble.bot ol { margin-left: 20px; margin-bottom: 8px; }
-        .bubble.bot strong { font-weight: 600; }
-        .bubble.bot h1, .bubble.bot h2, .bubble.bot h3 {
-            font-family: 'DM Serif Display', serif;
-            margin: 12px 0 6px;
-        }
-
-        /* Streaming cursor */
-        .bubble.streaming::after {
-            content: '●'; animation: pulse 1s infinite; color: var(--gold); margin-left: 4px;
-        }
-        @keyframes pulse { 0% { opacity: 0.2; } 50% { opacity: 1; } 100% { opacity: 0.2; } }
-
-        .meta { font-size: 10px; color: var(--ink-faint); margin-top: 4px; }
-
-        /* ── Welcome ── */
-        .welcome {
-            flex: 1; display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            text-align: center; padding: 24px;
-        }
-        .suggestions { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 20px; }
-        .suggestion {
-            background: var(--surface); border: 0.5px solid var(--border);
-            border-radius: 20px; padding: 8px 16px; font-size: 13px;
-            cursor: pointer; transition: 0.2s; color: var(--ink); font-family: inherit;
-        }
-        .suggestion:hover { border-color: var(--gold); background: var(--bg); }
-
-        /* ── Input ── */
-        .input-area { padding: 16px 24px 24px; background: var(--bg); border-top: 0.5px solid var(--border); }
-        .input-row {
-            display: flex; gap: 10px; align-items: flex-end;
-            max-width: 800px; margin: 0 auto;
-            background: var(--surface); border: 0.5px solid var(--border);
-            border-radius: 16px; padding: 10px 12px;
-        }
-        #question {
-            flex: 1; background: transparent; border: none; outline: none;
-            font-family: inherit; font-size: 15px; resize: none;
-            max-height: 150px; min-height: 24px; color: var(--ink);
-        }
-        #question::placeholder { color: var(--ink-faint); }
-        #sendBtn {
-            width: 38px; height: 38px; background: var(--ink); border: none;
-            border-radius: 12px; cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            transition: 0.2s; flex-shrink: 0;
-        }
-        #sendBtn:disabled { opacity: 0.3; cursor: not-allowed; }
-        #sendBtn:not(:disabled):hover { transform: scale(1.05); }
-        #sendBtn svg { width: 18px; height: 18px; fill: var(--bg); }
-
-        /* ── Citation Badge ── */
-        .citation-badge {
-            display: inline-flex; align-items: center; gap: 5px;
-            padding: 3px 9px;
-            background: var(--blue-light);
-            color: var(--blue);
-            border: 1px solid var(--blue-border);
-            border-radius: 12px;
-            font-size: 0.72rem;
-            font-weight: 600;
-            cursor: pointer;
-            text-decoration: none;
-            vertical-align: middle;
-            margin: 0 2px;
-            transition: background 0.15s, transform 0.1s;
-            font-family: 'DM Sans', sans-serif;
-            white-space: nowrap;
-        }
-        .citation-badge:hover {
-            background: var(--blue-border);
-            transform: translateY(-1px);
-        }
-        .citation-badge .cite-icon { font-size: 0.75rem; }
-        .citation-badge .cite-label { letter-spacing: 0.01em; }
-
-        /* ── Source Panel (slide in from right) ── */
-        #source-overlay {
-            display: none;
-            position: fixed; inset: 0;
-            background: rgba(0,0,0,0.35);
-            z-index: 1000;
-            justify-content: flex-end;
-        }
-        #source-overlay.open { display: flex; }
-        #source-panel {
-            width: min(440px, 100vw);
-            height: 100%;
-            background: var(--surface);
-            display: flex; flex-direction: column;
-            box-shadow: -4px 0 32px rgba(0,0,0,0.12);
-            transform: translateX(100%);
-            transition: transform 0.28s cubic-bezier(0.32, 0.72, 0, 1);
-        }
-        #source-overlay.open #source-panel { transform: translateX(0); }
-
-        .panel-header {
-            display: flex; justify-content: space-between; align-items: flex-start;
-            padding: 20px 20px 16px;
-            border-bottom: 0.5px solid var(--border);
-            background: var(--surface);
-        }
-        .panel-date { font-size: 11px; color: var(--ink-muted); margin-bottom: 4px; }
-        .panel-title {
-            font-family: 'DM Serif Display', serif;
-            font-size: 1.15rem; color: var(--ink); line-height: 1.3;
-        }
-        .panel-actions { display: flex; gap: 8px; margin-left: 12px; flex-shrink: 0; }
-        .btn-icon {
-            background: var(--bg); border: 0.5px solid var(--border);
-            border-radius: 8px; padding: 6px 10px;
-            cursor: pointer; font-size: 0.9rem; color: var(--ink);
-            text-decoration: none; display: flex; align-items: center;
-            transition: background 0.15s;
-        }
-        .btn-icon:hover { background: var(--border); }
-
-        .panel-body {
-            flex: 1; overflow-y: auto; padding: 20px;
-            font-size: 0.9rem; line-height: 1.75; color: var(--ink);
-        }
-        .panel-body p { margin-bottom: 10px; }
-        .panel-body h3 {
-            font-family: 'DM Serif Display', serif;
-            font-size: 1rem; margin: 16px 0 6px; color: var(--ink);
-        }
-        .panel-loading {
-            display: flex; align-items: center; justify-content: center;
-            height: 120px; color: var(--ink-muted); font-size: 0.875rem; gap: 8px;
-        }
-        .panel-spinner {
-            width: 16px; height: 16px; border: 2px solid var(--ink-faint);
-            border-top-color: var(--blue); border-radius: 50%;
-            animation: spin 0.7s linear infinite;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        .panel-footer {
-            padding: 14px 20px; border-top: 0.5px solid var(--border);
-        }
-        .btn-full {
-            display: block; text-align: center;
-            background: var(--ink); color: var(--bg);
-            padding: 11px; border-radius: 10px;
-            text-decoration: none; font-weight: 500; font-size: 0.875rem;
-            transition: opacity 0.15s;
-        }
-        .btn-full:hover { opacity: 0.85; }
-        .panel-error { color: #c0392b; font-size: 0.875rem; padding: 12px 0; }
-    </style>
+    <title>SABOT Monitoring Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body>
+<body class="bg-gray-900 text-gray-100 font-sans">
 
-<header>
-    <div class="logo-mark">
-        <svg viewBox="0 0 24 24"><path d="M12 2L3 7v10l9 5 9-5V7L12 2zm0 2.24L19 8.5l-7 3.88L5 8.5l7-4.26z"/></svg>
+<nav class="bg-gray-800 border-b border-gray-700 px-6 py-4 flex justify-between items-center">
+    <div class="flex items-center space-x-3">
+        <i class="fa-solid fa-chart-line text-emerald-400 text-2xl"></i>
+        <span class="text-xl font-bold tracking-wider text-white">SABOT <span
+                class="text-emerald-400">LOGS</span></span>
     </div>
-    <div>
-        <div class="header-title">Sekolah Sabat</div>
-        <div class="header-sub">SABOT · Sekolah Sabat AI Bot</div>
-    </div>
-    <div class="status-pill">
-        <div class="status-dot" id="statusDot"></div>
-        <span id="statusText">Menghubungkan...</span>
-    </div>
-</header>
-
-<div id="chat">
-    <div class="welcome" id="welcome">
-        <h1 style="font-family:'DM Serif Display';font-size:28px;">Halo, Paulus!</h1>
-        <p style="color:var(--ink-muted);margin-top:8px;">Ada yang ingin digali dari pelajaran hari ini?</p>
-        <div class="suggestions">
-            <button class="suggestion" onclick="ask('Apa tema utama triwulan ini?')">Tema Triwulan</button>
-            <button class="suggestion" onclick="ask('Rangkumkan pelajaran hari ini')">Pelajaran Hari Ini</button>
-            <button class="suggestion" onclick="ask('Apa ayat hafalan minggu ini?')">Ayat Hafalan</button>
-        </div>
-    </div>
-</div>
-
-<!-- Source Panel -->
-<div id="source-overlay" onclick="closePanel(event)">
-    <div id="source-panel">
-        <div class="panel-header">
-            <div>
-                <div class="panel-date" id="panel-date"></div>
-                <div class="panel-title" id="panel-title">Memuat...</div>
-            </div>
-            <div class="panel-actions">
-                <a id="panel-web-link" href="#" target="_blank" class="btn-icon" title="Buka di website">↗</a>
-                <button class="btn-icon" onclick="closePanel()" title="Tutup">✕</button>
-            </div>
-        </div>
-        <div class="panel-body" id="panel-body">
-            <div class="panel-loading"><div class="panel-spinner"></div> Memuat pelajaran...</div>
-        </div>
-        <div class="panel-footer">
-            <a id="panel-footer-link" href="#" target="_blank" class="btn-full">
-                Baca Selengkapnya di Sabbath School ↗
-            </a>
-        </div>
-    </div>
-</div>
-
-<div class="input-area">
-    <div class="input-row">
-        <textarea id="question" placeholder="Tanyakan sesuatu..." rows="1"></textarea>
-        <button id="sendBtn" onclick="sendQuestion()" disabled>
-            <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+    <div class="flex items-center space-x-4">
+            <span id="health-status"
+                  class="px-3 py-1 rounded-full text-xs font-semibold bg-red-900/50 text-red-400 border border-red-700">
+                <i class="fa-solid fa-circle-dot animate-pulse mr-1"></i> Checking System
+            </span>
+        <button onclick="loadDashboardData()"
+                class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg text-sm transition-all">
+            <i class="fa-solid fa-arrows-rotate mr-1"></i> Refresh
         </button>
+    </div>
+</nav>
+
+<div class="p-6 max-w-7xl mx-auto space-y-6">
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 flex items-center justify-between">
+            <div>
+                <p class="text-sm text-gray-400 uppercase font-semibold">Total Pertanyaan</p>
+                <h3 id="stat-total" class="text-3xl font-bold mt-1 text-white">-</h3>
+            </div>
+            <div class="p-4 bg-emerald-500/10 rounded-lg text-emerald-400"><i class="fa-solid fa-comments text-2xl"></i>
+            </div>
+        </div>
+        <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 flex items-center justify-between">
+            <div>
+                <p class="text-sm text-gray-400 uppercase font-semibold">Kueri Hari Ini</p>
+                <h3 id="stat-today" class="text-3xl font-bold mt-1 text-white">-</h3>
+            </div>
+            <div class="p-4 bg-blue-500/10 rounded-lg text-blue-400"><i class="fa-solid fa-calendar-day text-2xl"></i>
+            </div>
+        </div>
+        <div class="bg-gray-800 p-6 rounded-xl border border-gray-700">
+            <p class="text-sm text-gray-400 uppercase font-semibold mb-2">Lesson Teraktif</p>
+            <div id="stat-top-lessons" class="space-y-1 text-xs text-gray-300">-</div>
+        </div>
+        <div class="bg-gray-800 p-6 rounded-xl border border-gray-700">
+            <p class="text-sm text-gray-400 uppercase font-semibold mb-2">Top Pertanyaan Berulang</p>
+            <div id="stat-top-questions" class="space-y-1 text-xs text-emerald-300 truncate max-w-xs">-</div>
+        </div>
+    </div>
+
+    <div class="bg-gray-800 rounded-xl border border-gray-700 overflow-hidden">
+        <div class="p-5 border-b border-gray-700 bg-gray-800/50 flex justify-between items-center">
+            <h2 class="text-lg font-bold text-white"><i class="fa-solid fa-list-ul mr-2 text-emerald-400"></i>Pipa
+                Riwayat Chatbot (Live Logs)</h2>
+            <div class="flex items-center space-x-2">
+                <input type="text" id="filter-lesson" placeholder="Cari Lesson ID (e.g. 2026-q2-w01-d1)"
+                       class="bg-gray-900 border border-gray-700 rounded-lg px-3 py-1.5 text-xs focus:outline-none focus:border-emerald-500 text-white w-64">
+                <button onclick="loadLogs()"
+                        class="bg-emerald-500 hover:bg-emerald-600 px-3 py-1.5 rounded-lg text-xs font-semibold text-gray-900 transition-all">
+                    Filter
+                </button>
+            </div>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                <tr class="bg-gray-900/50 text-gray-400 text-xs uppercase border-b border-gray-700">
+                    <th class="p-4 w-12">ID</th>
+                    <th class="p-4 w-36">Timestamp</th>
+                    <th class="p-4 w-32">Lesson ID</th>
+                    <th class="p-4">Pertanyaan Jemaat</th>
+                    <th class="p-4">Sintesis Jawaban Chatbot</th>
+                </tr>
+                </thead>
+                <tbody id="logs-tbody" class="divide-y divide-gray-700/50 text-sm">
+                <tr>
+                    <td colspan="5" class="p-8 text-center text-gray-500"><i
+                            class="fa-solid fa-spinner animate-spin mr-2"></i>Memuat riwayat transaksi log...
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
 <script>
-    const API = 'http://localhost:8000';
-    let isStreaming = false;
+    const BASE_URL = "https://api.developedbytoo.me";
 
-    // ── Citation: parse doc_id ─────────────────────────────────────────────
-    function parseDocId(docId) {
-    const m = docId.match(/(\d{4})-q(\d+)-w(\d+)-d(\d+)/);
-    if (!m) return null;
-
-    const year = m[1];
-    const quarter = m[2].padStart(2, '0');
-    const week = m[3].padStart(2, '0');
-    const day = m[4].padStart(2, '0');
-
-    const quarterlyId = `${year}-${quarter}`;
-
-    return {
-        label: `Mg ${parseInt(week)} · Hr ${parseInt(day)}`,
-        webUrl: `https://sabbath-school.adventech.io/in/${quarterlyId}/${week}/${day}`,
-        apiUrl: `https://sabbath-school.adventech.io/api/v2/in/quarterlies/${quarterlyId}/lessons/${week}/days/${day}/read/index.json`,
-    };
-}
-
-    // Ganti [2026-q2-w01-d1] di HTML string → citation badge
-    function injectCitations(html) {
-        return html.replace(/\[(\d{4}-q\d+-w\d+-d\d+)\]/g, (_, docId) => {
-            const p = parseDocId(docId);
-            if (!p) return `[${docId}]`;
-            return `<a class="citation-badge" href="javascript:void(0)"
-                        onclick="openSource('${docId}')"
-                        title="${docId}">
-                        <span class="cite-icon">📖</span>
-                        <span class="cite-label">${p.label}</span>
-                    </a>`;
-        });
-    }
-
-    // ── Source Panel ────────────────────────────────────────────────────────
-    async function openSource(docId) {
-        const p = parseDocId(docId);
-        if (!p) return;
-
-        // Reset panel
-        document.getElementById('panel-date').textContent = '';
-        document.getElementById('panel-title').textContent = 'Memuat...';
-        document.getElementById('panel-body').innerHTML =
-            '<div class="panel-loading"><div class="panel-spinner"></div> Memuat pelajaran...</div>';
-        document.getElementById('panel-web-link').href = p.webUrl;
-        document.getElementById('panel-footer-link').href = p.webUrl;
-
-        // Buka overlay
-        const overlay = document.getElementById('source-overlay');
-        overlay.classList.add('open');
-        document.body.style.overflow = 'hidden';
-
-        // Fetch data
-        try {
-            const res = await fetch(p.apiUrl);
-            if (!res.ok) throw new Error('Tidak dapat memuat data.');
-            const data = await res.json();
-            renderPanel(data, p.webUrl);
-        } catch (e) {
-            document.getElementById('panel-title').textContent = 'Gagal memuat';
-            document.getElementById('panel-body').innerHTML =
-                `<p class="panel-error">⚠️ ${e.message}</p>
-                 <p style="font-size:0.85rem;color:var(--ink-muted);margin-top:8px;">
-                    Coba buka langsung di website Sabbath School.</p>`;
-        }
-    }
-
-    function renderPanel(data, webUrl) {
-        // Struktur API: data.day atau data langsung
-        const day = data.day || data;
-
-        document.getElementById('panel-date').textContent = day.date || '';
-        document.getElementById('panel-title').textContent = day.title || 'Pelajaran';
-
-        const body = document.getElementById('panel-body');
-
-        // Render blocks kalau ada
-        if (day.blocks && day.blocks.length > 0) {
-            body.innerHTML = day.blocks.map(block => {
-                switch (block.type) {
-                    case 'heading':
-                        return `<h3>${block.data?.text || ''}</h3>`;
-                    case 'paragraph':
-                        return `<p>${block.data?.text || ''}</p>`;
-                    case 'reference':
-                    case 'blockquote':
-                        return `<blockquote style="border-left:3px solid var(--gold);padding:8px 14px;
-                                    margin:10px 0;background:var(--bg);font-style:italic;
-                                    font-size:0.875rem;border-radius:0 6px 6px 0;">
-                                    ${block.data?.text || ''}</blockquote>`;
-                    default:
-                        return block.data?.text ? `<p>${block.data.text}</p>` : '';
-                }
-            }).join('');
-        } else if (day.content) {
-            // Fallback: plain text / markdown
-            body.innerHTML = marked.parse(day.content);
-        } else {
-            body.innerHTML = `<p style="color:var(--ink-muted);font-size:0.875rem;">
-                Konten tersedia di website Sabbath School.</p>`;
-        }
-    }
-
-    function closePanel(e) {
-        // Tutup hanya kalau klik overlay (bukan panel-nya)
-        if (e && e.target !== document.getElementById('source-overlay')) return;
-        const overlay = document.getElementById('source-overlay');
-        overlay.classList.remove('open');
-        document.body.style.overflow = '';
-    }
-    // Tombol ✕ langsung tutup
-    function closePanelDirect() {
-        document.getElementById('source-overlay').classList.remove('open');
-        document.body.style.overflow = '';
-    }
-    // Patch tombol tutup
-    document.querySelector('#source-panel .btn-icon:last-child')
-        .addEventListener('click', closePanelDirect);
-
-    // ESC untuk tutup panel
-    document.addEventListener('keydown', e => {
-        if (e.key === 'Escape') closePanelDirect();
-    });
-
-    // ── Health Check ────────────────────────────────────────────────────────
     async function checkHealth() {
         try {
-            const r = await fetch(API + '/health');
+            const r = await fetch(`${BASE_URL}/health`);
             const d = await r.json();
-            if (d.rag_ready) {
-                document.getElementById('statusDot').classList.add('ready');
-                document.getElementById('statusText').textContent = 'Sistem Siap';
-                document.getElementById('sendBtn').disabled = false;
+            const el = document.getElementById('health-status');
+            if (d.status === 'ok' && d.rag_ready) {
+                el.className = "px-3 py-1 rounded-full text-xs font-semibold bg-emerald-950 text-emerald-400 border border-emerald-700";
+                el.innerHTML = `<i class="fa-solid fa-circle-check mr-1"></i> RAG ENGINE READY`;
             } else {
-                document.getElementById('statusText').textContent = 'Inisialisasi RAG...';
-                setTimeout(checkHealth, 3000);
+                el.className = "px-3 py-1 rounded-full text-xs font-semibold bg-amber-950 text-amber-400 border border-amber-700";
+                el.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-1"></i> RAG UNINITIALIZED`;
             }
         } catch (e) {
-            document.getElementById('statusText').textContent = 'Server Offline';
-            setTimeout(checkHealth, 3000);
+            document.getElementById('health-status').className = "px-3 py-1 rounded-full text-xs font-semibold bg-red-950 text-red-400 border border-red-700";
+            document.getElementById('health-status').innerHTML = `<i class="fa-solid fa-heart-crack mr-1"></i> DISCONNECTED`;
         }
     }
 
-    function ask(text) {
-        document.getElementById('question').value = text;
-        sendQuestion();
+    async function loadStats() {
+        try {
+            const r = await fetch(`${BASE_URL}/dashboard/stats`);
+            const d = await r.json();
+            document.getElementById('stat-total').innerText = d.total_chats;
+            document.getElementById('stat-today').innerText = d.today_chats;
+
+            const lesEl = document.getElementById('stat-top-lessons');
+            lesEl.innerHTML = d.top_lessons.length ? d.top_lessons.map(l =>
+                `<div class="flex justify-between border-b border-gray-700/40 py-0.5"><span class="font-mono text-gray-300">${l.lesson_id}</span><span class="font-bold text-emerald-400">${l.count}×</span></div>`
+            ).join('') : '<span class="text-gray-500">Belum ada data</span>';
+
+            const qEl = document.getElementById('stat-top-questions');
+            qEl.innerHTML = d.top_questions.length ? d.top_questions.slice(0, 3).map(q =>
+                `<div class="truncate border-b border-gray-700/40 py-0.5 text-gray-300" title="${q.question}">${q.count}× — ${q.question}</div>`
+            ).join('') : '<span class="text-gray-500">Belum ada data</span>';
+        } catch (e) {
+            console.error("Gagal memuat statistik:", e);
+        }
     }
 
-    function addMessage(role, text) {
-        document.getElementById('welcome')?.remove();
-        const chat = document.getElementById('chat');
-        const wrap = document.createElement('div');
-        wrap.className = `message-wrap ${role}`;
-        const bubble = document.createElement('div');
-        bubble.className = `bubble ${role}`;
-        if (role === 'user') bubble.textContent = text;
-        if (role === 'bot') bubble.classList.add('streaming');
-        wrap.appendChild(bubble);
-        chat.appendChild(wrap);
-        chat.scrollTop = chat.scrollHeight;
-        return bubble;
-    }
+    async function loadLogs() {
+        const tbody = document.getElementById('logs-tbody');
+        const lessonId = document.getElementById('filter-lesson').value.strip ? document.getElementById('filter-lesson').value.strip() : document.getElementById('filter-lesson').value;
 
-    async function sendQuestion() {
-        if (isStreaming) return;
-        const input = document.getElementById('question');
-        const q = input.value.trim();
-        if (!q) return;
-
-        input.value = '';
-        input.style.height = 'auto';
-        isStreaming = true;
-        document.getElementById('sendBtn').disabled = true;
-
-        addMessage('user', q);
-        const botBubble = addMessage('bot', '');
+        let url = `${BASE_URL}/dashboard/logs?limit=50`;
+        if (lessonId) url += `&lesson_id=${encodeURIComponent(lessonId)}`;
 
         try {
-            const resp = await fetch(API + '/ask', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ question: q }),
-            });
+            const r = await fetch(url);
+            const res = await r.json();
 
-            const reader = resp.body.getReader();
-            const decoder = new TextDecoder();
-            let fullText = '';
-
-            while (true) {
-                const { done, value } = await reader.read();
-                if (done) break;
-                fullText += decoder.decode(value, { stream: true });
-
-                const rendered = marked.parse(fullText);
-                botBubble.innerHTML = injectCitations(rendered);
-                document.getElementById('chat').scrollTop = document.getElementById('chat').scrollHeight;
+            if (!res.data || res.data.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-gray-500"><i class="fa-solid fa-folder-open mr-2"></i>Tidak ada transaksi riwayat chat log ditemukan</td></tr>`;
+                return;
             }
-        } catch (e) {
-            botBubble.textContent = 'Maaf, terjadi gangguan koneksi ke server.';
-        } finally {
-            isStreaming = false;
-            botBubble.classList.remove('streaming');
-            document.getElementById('sendBtn').disabled = false;
 
-            const meta = document.createElement('div');
-            meta.className = 'meta';
-            meta.textContent =
-                new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
-                + ' • RAG Hybrid';
-            botBubble.parentNode.appendChild(meta);
+            tbody.innerHTML = res.data.map(row => `
+                    <tr class="hover:bg-gray-700/30 transition-all">
+                        <td class="p-4 text-gray-400 font-mono text-xs">${row.id}</td>
+                        <td class="p-4 text-gray-400 text-xs whitespace-nowrap">${row.created_at}</td>
+                        <td class="p-4"><span class="px-2 py-0.5 bg-gray-900 border border-gray-700 rounded text-xs font-mono text-emerald-400">${row.lesson_id || 'GLOBAL/MIX'}</span></td>
+                        <td class="p-4 text-gray-200 font-medium max-w-xs md:max-w-md">${row.question}</td>
+                        <td class="p-4 text-gray-300 max-w-md bg-gray-900/20"><div class="max-h-24 overflow-y-auto whitespace-pre-wrap pr-2 text-xs leading-relaxed">${row.answer || '<span class="text-red-400 italic">[No Response]</span>'}</div></td>
+                    </tr>
+                `).join('');
+        } catch (e) {
+            tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-red-400"><i class="fa-solid fa-triangle-exclamation mr-2"></i>Gagal memanggil data endpoint log</td></tr>`;
         }
     }
 
-    document.getElementById('question').addEventListener('input', function () {
-        this.style.height = 'auto';
-        this.style.height = this.scrollHeight + 'px';
-    });
-    document.getElementById('question').addEventListener('keydown', e => {
-        if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendQuestion(); }
-    });
+    function loadDashboardData() {
+        checkHealth();
+        loadStats();
+        loadLogs();
+    }
 
-    checkHealth();
+    document.addEventListener("DOMContentLoaded", loadDashboardData);
 </script>
 </body>
 </html>
