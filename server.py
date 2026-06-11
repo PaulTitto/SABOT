@@ -12,7 +12,7 @@ from starlette.staticfiles import StaticFiles
 from core.embedding import gemini_embedding_func
 from helper.date_helper import (
     extract_date_from_question,
-    get_today_iso
+    get_today_iso, get_lesson_id_by_date
 )
 import os
 import json
@@ -196,10 +196,18 @@ async def ask(req: AskRequest):
         original_question = question
 
         date_iso = extract_date_from_question(question)
+
         if date_iso:
-            question = f"Pelajaran untuk tanggal {date_iso}. {question}"
-        elif "hari ini" in question.lower():
-            question = f"Pelajaran untuk tanggal {get_today_iso()}. {question}"
+
+            lesson_id = get_lesson_id_by_date(
+                date_iso
+            )
+
+            if lesson_id:
+                question = (
+                    f"Pelajaran {lesson_id}. "
+                    f"{question}"
+                )
 
         param = QueryParam(
             mode="mix",

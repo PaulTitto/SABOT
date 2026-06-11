@@ -26,3 +26,8 @@ def count_graph_stats(working_dir: str) -> dict:
         print(f"Gagal memproses file XML. Pastikan file tidak korup.")
         return {"entities": 0, "relations": 0}
 
+if __name__ == "__main__":
+    WORKING_DIR = r"C:\Users\PaulTitto\Downloads\SKRIPSI NLP\final_boss_working_dir"
+
+    graph = count_graph_stats(WORKING_DIR)
+    print(graph)
