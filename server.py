@@ -1,27 +1,24 @@
 import inspect
-import os.path
+import os
+import re
+import sqlite3
+import datetime
 from contextlib import asynccontextmanager
+from dotenv import load_dotenv
+
 import uvicorn
 from fastapi import FastAPI, Query
-from lightrag import QueryParam
-from openai import BaseModel
+from lightrag import QueryParam, LightRAG
+from lightrag.llm.openai import openai_complete_if_cache
+from lightrag.utils import TokenTracker
+from pydantic import BaseModel
 from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import StreamingResponse
 from starlette.staticfiles import StaticFiles
 
 from core.embedding import gemini_embedding_func
-from helper.date_helper import (
-    extract_date_from_question,
-    get_today_iso, get_lesson_id_by_date
-)
-import os
-import json
-import sqlite3
-import datetime
-from dotenv import load_dotenv
-from lightrag import LightRAG
-from lightrag.llm.openai import openai_complete_if_cache
-from lightrag.utils import TokenTracker
+# Import fungsi yang sudah disesuaikan dari date_helper
+from helper.date_helper import rewrite_question
 
 load_dotenv()
 
@@ -32,6 +29,7 @@ DB_PATH = "/var/www/ss-chatbot/chat_logs.db"
 
 os.makedirs(WORKING_DIR, exist_ok=True)
 
+
 # ========================
 # SQLITE SETUP
 # ========================
@@ -40,15 +38,16 @@ def init_db():
     conn = sqlite3.connect(DB_PATH)
     conn.execute("""
         CREATE TABLE IF NOT EXISTS chat_logs (
-            id          INTEGER PRIMARY KEY AUTOINCREMENT,
-            question    TEXT NOT NULL,
-            answer      TEXT,
-            lesson_id   TEXT,
-            created_at  TEXT DEFAULT (datetime('now', 'localtime'))
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            question TEXT NOT NULL,
+            answer TEXT,
+            lesson_id TEXT,
+            created_at TEXT DEFAULT (datetime('now', 'localtime'))
         )
     """)
     conn.commit()
     conn.close()
+
 
 def save_chat_log(question: str, answer: str, lesson_id: str = None):
     try:
@@ -62,23 +61,28 @@ def save_chat_log(question: str, answer: str, lesson_id: str = None):
     except Exception as e:
         print(f"[DB ERROR] {e}")
 
+
 def extract_lesson_id(question: str) -> str | None:
-    """Ekstrak lesson id dari pertanyaan, misal 2026-q2-w01-d1"""
-    import re
-    m = re.search(r'\d{4}-q\d+-w\d+-d\d+', question)
+    """
+    Ekstrak lesson id dari pertanyaan berbentuk tag maupun teks biasa.
+    Mendukung format penuh (w11-d04) maupun format minggu saja (w11).
+    """
+    m = re.search(r'\d{4}-q\d+-w\d+(-d\d+)?', question)
     return m.group(0) if m else None
 
+
 # ========================
-# LLM
+# LLM SETUP
 # ========================
 
 rag = None
 
+
 async def deepseek_llm(
-    prompt, system_prompt=None, history_messages=[], keyword_extraction=False, **kwargs
+        prompt, system_prompt=None, history_messages=[], keyword_extraction=False, **kwargs
 ) -> str:
     return await openai_complete_if_cache(
-        os.getenv("LLM_MODEL", "deepseek-v4-flash"),
+        os.getenv("LLM_MODEL", "deepseek-v4-pro"),
         prompt,
         system_prompt=system_prompt,
         history_messages=history_messages,
@@ -87,22 +91,10 @@ async def deepseek_llm(
         extra_body={"thinking": {"type": "disabled"}},
         **kwargs,
     )
-# async def deepseek_llm(
-#         prompt, system_prompt=None, history_messages=[], keyword_extraction=False, **kwargs
-# ) -> str:
-#     return await openai_complete_if_cache(
-#         # os.getenv("LLM_MODEL", "deepseek-chat"),
-#         os.getenv("LLM_MODEL", "deepseek-v4-flash"),
-#         prompt,
-#         system_prompt=system_prompt,
-#         history_messages=history_messages,
-#         api_key=os.getenv("DEEPSEEK_API_KEY"),
-#         base_url=os.getenv("DEEPSEEK_BASE_URL"),
-#         **kwargs,
-#     )
 
 
 async def init_deepseek_lightRAG():
+    global rag
     rag = LightRAG(
         working_dir=WORKING_DIR,
         llm_model_func=deepseek_llm,
@@ -116,14 +108,12 @@ async def init_deepseek_lightRAG():
 
 @asynccontextmanager
 async def lifespan(ap: FastAPI):
-    global rag
-
     print("Starting Initialize LightRAG")
     init_db()
     print("Database initialized")
 
     try:
-        rag = await init_deepseek_lightRAG()
+        await init_deepseek_lightRAG()
         print("LightRAG Initialized")
     except Exception as e:
         print("LightRAG failed:", e)
@@ -135,8 +125,6 @@ async def lifespan(ap: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
-
-
 
 app.add_middleware(
     CORSMiddleware,
@@ -151,13 +139,19 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 # ========================
 # MODELS
 # ========================
 
+class ChatMessage(BaseModel):
+    role: str  # 'user' atau 'assistant'
+    content: str
+
 class AskRequest(BaseModel):
     question: str
     model: str = "deepseek"
+    history: list[ChatMessage] = []  # MENANGKAP MEMORI CHAT LANGSUNG DARI FRONTEND (VUE)
 
 
 # ========================
@@ -165,10 +159,6 @@ class AskRequest(BaseModel):
 # ========================
 
 SYSTEM_INSTRUCTION = (
-    # "[PERINTAH UTAMA: OUTPUT FINAL HANYA JAWABAN BERSIH]\n"
-    # "Kamu adalah SABOT (Asisten Pemandu Sekolah Sabat).\n"
-    # "Tugasmu HANYA memberikan jawaban akhir yang bersih, ramah, dan ringkas kepada pengguna berdasarkan dokumen yang diberikan.\n\n"
-    # "⚠️ PERINGATAN KERAS:\n"
     "1. JANGAN PERNAH menampilkan proses berpikir, analisis dokumen, evaluasi instruksi, atau perdebatan internalmu di dalam teks jawaban.\n"
     "2. JANGAN menulis kata-kata seperti 'Mari kita lihat dokumen', 'Berdasarkan chunk', 'Instruksi mengatakan', atau 'Jadi referensinya adalah'.\n"
     "3. Langsung berikan jawaban substantif beserta referensinya di akhir kalimat.\n"
@@ -192,55 +182,61 @@ async def ask(req: AskRequest):
             yield "data: [ERROR] RAG system not initialized\n\n"
             return
 
-        question = req.question.strip()
-        original_question = question
+        original_question = req.question.strip()
 
-        date_iso = extract_date_from_question(question)
+        # 1. Biarkan date_helper melakukan rewrite hanya pada pertanyaan intinya saja (agar retrieval akurat)
+        processed_question = rewrite_question(original_question)
 
-        if date_iso:
+        # 2. Susun history dari Vue ke dalam format kamus standar internal LightRAG
+        rag_history = []
+        for msg in req.history:
+            rag_history.append({
+                "role": "user" if msg.role == "user" else "assistant",
+                "content": msg.content
+            })
 
-            lesson_id = get_lesson_id_by_date(
-                date_iso
-            )
-
-            if lesson_id:
-                question = (
-                    f"Pelajaran {lesson_id}. "
-                    f"{question}"
-                )
-
+        # 3. Masukkan ke QueryParam menggunakan properti resmi bawaan core LightRAG
         param = QueryParam(
             mode="mix",
             stream=True,
-            user_prompt=SYSTEM_INSTRUCTION
+            user_prompt=SYSTEM_INSTRUCTION,
+            conversation_history=rag_history  # BINDING MEMORI DI SINI (Hanya dikirim ke LLM, tidak merusak RAG)
         )
 
         full_answer = ""
-        in_think_block = False 
         try:
-            resp = await rag.aquery(question, param=param)
+            resp = await rag.aquery(processed_question, param=param)
 
             if inspect.isasyncgen(resp):
                 text_buffer = ""
+                in_think_block = False
+
                 async for chunk in resp:
                     full_answer += chunk
                     text_buffer += chunk
 
-                    if "<think>" in text_buffer:
+                    if not in_think_block and "<think>" in text_buffer:
+                        in_think_block = True
+
+                    if in_think_block:
                         if "</think>" in text_buffer:
-                            parts = text_buffer.split("</think>")
+                            parts = text_buffer.split("</think>", 1)
                             text_buffer = parts[1]
-                            if text_buffer:
-                                yield f"data: {text_buffer}\n\n"
-                                text_buffer = ""
+                            in_think_block = False
                         else:
                             continue
-                    else:
+
+                    if not in_think_block and text_buffer:
+                        if "<" in text_buffer and "<think".startswith(text_buffer[text_buffer.index("<"):]):
+                            continue
                         yield f"data: {text_buffer}\n\n"
                         text_buffer = ""
+
+                if text_buffer and not in_think_block:
+                    yield f"data: {text_buffer}\n\n"
+
             else:
                 full_answer = str(resp)
-                import re
                 answer_clean = re.sub(r'<think>.*?</think>', '', full_answer, flags=re.DOTALL).strip()
                 yield f"data: {answer_clean}\n\n"
 
@@ -248,10 +244,9 @@ async def ask(req: AskRequest):
             yield f"data: [ERROR Server] {str(e)}\n\n"
 
         finally:
-            import re
             final_clean_answer = re.sub(r'<think>.*?</think>', '', full_answer, flags=re.DOTALL).strip()
+            lesson_id = extract_lesson_id(processed_question)
 
-            lesson_id = extract_lesson_id(question)
             save_chat_log(
                 question=original_question,
                 answer=final_clean_answer,
@@ -270,6 +265,7 @@ async def ask(req: AskRequest):
         }
     )
 
+
 @app.get("/health")
 async def health_check():
     return {
@@ -280,11 +276,10 @@ async def health_check():
 
 @app.get("/dashboard/logs")
 async def get_logs(
-    limit: int = Query(50, ge=1, le=500),
-    offset: int = Query(0, ge=0),
-    lesson_id: str = Query(None)
+        limit: int = Query(50, ge=1, le=500),
+        offset: int = Query(0, ge=0),
+        lesson_id: str = Query(None)
 ):
-    """Ambil semua chat logs untuk dashboard"""
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
 
@@ -318,7 +313,6 @@ async def get_logs(
 
 @app.get("/dashboard/stats")
 async def get_stats():
-    """Statistik ringkas untuk dashboard"""
     conn = sqlite3.connect(DB_PATH)
 
     total = conn.execute("SELECT COUNT(*) FROM chat_logs").fetchone()[0]
@@ -330,21 +324,21 @@ async def get_stats():
     ).fetchone()[0]
 
     top_lessons = conn.execute("""
-        SELECT lesson_id, COUNT(*) as count
-        FROM chat_logs
-        WHERE lesson_id IS NOT NULL
-        GROUP BY lesson_id
-        ORDER BY count DESC
-        LIMIT 5
-    """).fetchall()
+                               SELECT lesson_id, COUNT(*) as count
+                               FROM chat_logs
+                               WHERE lesson_id IS NOT NULL
+                               GROUP BY lesson_id
+                               ORDER BY count DESC
+                               LIMIT 5
+                               """).fetchall()
 
     top_questions = conn.execute("""
-        SELECT question, COUNT(*) as count
-        FROM chat_logs
-        GROUP BY question
-        ORDER BY count DESC
-        LIMIT 10
-    """).fetchall()
+                                 SELECT question, COUNT(*) as count
+                                 FROM chat_logs
+                                 GROUP BY question
+                                 ORDER BY count DESC
+                                 LIMIT 10
+                                 """).fetchall()
 
     conn.close()
 
