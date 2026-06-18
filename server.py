@@ -17,7 +17,6 @@ from starlette.responses import StreamingResponse
 from starlette.staticfiles import StaticFiles
 
 from core.embedding import gemini_embedding_func
-# Import fungsi yang sudah disesuaikan dari date_helper
 from helper.date_helper import rewrite_question
 
 load_dotenv()
@@ -82,12 +81,13 @@ async def deepseek_llm(
         prompt, system_prompt=None, history_messages=[], keyword_extraction=False, **kwargs
 ) -> str:
     return await openai_complete_if_cache(
-        os.getenv("LLM_MODEL", "deepseek-v4-pro"),
+        # os.getenv("LLM_MODEL", "deepseek-v4-flash"),
+        os.getenv("LLM_MODEL", "deepseek-v4-flash"),
         prompt,
         system_prompt=system_prompt,
         history_messages=history_messages,
-        api_key=os.getenv("DEEPSEEK_API_KEY"),
-        base_url=os.getenv("DEEPSEEK_BASE_URL"),
+        api_key=os.getenv("OPENAI_API_KEY"),
+        base_url=os.getenv("OPENAI_BASE_URL"),
         extra_body={"thinking": {"type": "disabled"}},
         **kwargs,
     )
@@ -145,35 +145,30 @@ app.add_middleware(
 # ========================
 
 class ChatMessage(BaseModel):
-    role: str  # 'user' atau 'assistant'
+    role: str
     content: str
 
 class AskRequest(BaseModel):
     question: str
     model: str = "deepseek"
-    history: list[ChatMessage] = []  # MENANGKAP MEMORI CHAT LANGSUNG DARI FRONTEND (VUE)
+    history: list[ChatMessage] = []
 
-
-# ========================
-# ENDPOINTS
-# ========================
 
 SYSTEM_INSTRUCTION = (
+    "CONTOH JAWABAN YANG BENAR:\n"
+    "Manusia diciptakan menurut gambar dan rupa Allah untuk memelihara ciptaan-Nya dengan penuh kasih sayang. [2026-q2-w11-d01]\n\n"
+    "CONTOH JAWABAN YANG SALAH (JANGAN PERNAH DIKETIK):\n"
+    "- Tentu, berdasarkan dokumen yang tersedia...\n"
+    "- Berdasarkan referensi [2026-q2-w11-d01] dikisahkan bahwa...\n"
+    "- Referensi: [2026-q2-w11-d01]\n\n"
+    "ATURAN KERAS UTAMA:\n"
     "1. JANGAN PERNAH menampilkan proses berpikir, analisis dokumen, evaluasi instruksi, atau perdebatan internalmu di dalam teks jawaban.\n"
     "2. JANGAN menulis kata-kata seperti 'Mari kita lihat dokumen', 'Berdasarkan chunk', 'Instruksi mengatakan', atau 'Jadi referensinya adalah'.\n"
-    "3. Langsung berikan jawaban substantif beserta referensinya di akhir kalimat.\n"
-    "4. Langsung to the point.\n"
-    "5. Jangan pernah memulai jawaban dengan frasa seperti: 'Tentu', 'Berdasarkan materi yang tersedia', 'Baik', 'Tentu saja', atau kalimat pembuka serupa.\n"
-    "6. Langsung jawab pertanyaannya tanpa basa-basi.\n"
-    "7. Anda adalah AI Reading Assistant untuk pelajaran Sekolah Sabat. Jawaban harus natural, modern, mudah dipahami, dan tidak terlalu formal.\n"
-    "8. Jangan gunakan kalimat seperti: 'Berdasarkan konteks yang tersedia'.\n"
-    "9. Jangan gunakan heading seperti 'References'.\n"
-    "10. Jawaban harus terasa seperti assistant modern seperti ChatGPT atau ScienceDirect AI.\n"
-    "11. Jika user meminta ringkasan, buat ringkasan natural dan singkat.\n"
-    "12. Setiap referensi dokumen HARUS menggunakan format kurung siku di akhir jawaban. Contoh: [2026-q2-w01-d1]. Jangan gunakan format DOC id:.\n"
-    "13. Format referensi wajib mengikuti pola: YYYY-qX-wXX-dX."
+    "3. Langsung berikan jawaban substantif tanpa kalimat basa-basi di awal (Jangan pakai kata 'Tentu', 'Baik', 'Berdasarkan materi'). Langsung to the point.\n"
+    "4. Setiap referensi dokumen HARUS diletakkan di akhir kalimat jawaban menggunakan satu format kurung siku tunggal. Contoh: [2026-q2-w11-d01].\n"
+    "5. JANGAN gunakan heading 'References' atau 'Sumber:'.\n"
+    "6. Format kode referensi wajib menggunakan pola persis: [YYYY-qX-wXX-dX] (huruf w dan d harus kecil, angka minggu wajib 2 digit misal w11 atau w01, angka hari 1 digit misal d1 atau d7)."
 )
-
 
 @app.post("/ask")
 async def ask(req: AskRequest):
@@ -184,10 +179,8 @@ async def ask(req: AskRequest):
 
         original_question = req.question.strip()
 
-        # 1. Biarkan date_helper melakukan rewrite hanya pada pertanyaan intinya saja (agar retrieval akurat)
         processed_question = rewrite_question(original_question)
 
-        # 2. Susun history dari Vue ke dalam format kamus standar internal LightRAG
         rag_history = []
         for msg in req.history:
             rag_history.append({
@@ -195,12 +188,16 @@ async def ask(req: AskRequest):
                 "content": msg.content
             })
 
-        # 3. Masukkan ke QueryParam menggunakan properti resmi bawaan core LightRAG
         param = QueryParam(
             mode="mix",
             stream=True,
             user_prompt=SYSTEM_INSTRUCTION,
-            conversation_history=rag_history  # BINDING MEMORI DI SINI (Hanya dikirim ke LLM, tidak merusak RAG)
+            conversation_history=rag_history,
+
+            top_k=4,
+            chunk_top_k=3,
+            enable_rerank=False,
+            response_type="Single Paragraph"
         )
 
         full_answer = ""
